@@ -32,7 +32,7 @@
                 </span>
             </div>`;
         } else {
-            // Multisynq ve oyun scriptlerin yüklenmesini burada başlat
+
             (function() {
                 const script = document.createElement('script');
                 script.src = 'https://cdn.jsdelivr.net/npm/@multisynq/client@latest/bundled/multisynq-client.min.js';
@@ -103,7 +103,7 @@
 
             loadSound("slash", "assets/sounds/slash.mp3");
 
-            // Oyuncu objeleri
+
             let player1Spawned = false, player2Spawned = false;
             let player1 = null, player2 = null;
             let player1HealthBar, player2HealthBar;
@@ -157,7 +157,7 @@
                 add([rect(16, 720), area(), body({isStatic: true}), pos(-20,0)]);
                 add([rect(16, 720), area(), body({isStatic: true}), pos(1280,0)]);
 
-                // left invisible wall
+
                 add([
                     rect(16, 720),
                     area(),
@@ -165,7 +165,7 @@
                     pos(-20,0)
                 ])
 
-                // right invisible wall
+
                 add([
                     rect(16, 720),
                     area(),
@@ -183,7 +183,7 @@
                     rect(healthBarWidth, 20),
                     area(),
                     outline(3),
-                    pos(window.innerWidth - healthBarWidth - 50, 20), // Sağdan 50px boşluk bırak
+                    pos(window.innerWidth - healthBarWidth - 50, 20),
                     color(200,0,0)
                 ]);
 
@@ -270,25 +270,12 @@
                     const slashY = player.pos.y - 200;
                     lastFlipX = player.flipX;
                     let tag = (window.myRole === "player1" ? "player1attackHitbox" : "player2attackHitbox");
-                    // let hitbox = add([
-                    //     rect(300,300),
-                    //     area(),
-                    //     pos(currentFlip ? slashXFlipped : slashX, slashY),
-                    //     opacity(0),
-                    //     tag
-                    // ]);
 
-                    // wait(5, () => hitbox.destroy()); // 1 saniye kalsın
-                    // player1.onCollide("testhitbox", () => {
-                    //         console.log("BASİT COLLISION ÇALIŞTI!");
-                    //     });
 
-                    // console.log(`[ATTACK] Hitbox created: ${tag} at (${currentFlip ? slashXFlipped : slashX}, ${slashY})`);
+
                     player.play("attack", {
                         onEnd: () => {
-                            // hitbox.destroy();
                             resetPlayerToIdle(player);
-                            // Animasyon bitince saldırı bitmiş say, state'i sıfırla
                             if (viewInstance && window.myRole) {
                                 viewInstance.sendAction({ x: player.pos.x, y: player.pos.y, anim: "idle", isAttacking: false });
                             }
@@ -331,14 +318,12 @@
             }
 
             function playerCanHitOpponent(attacker, defender) {
-                const range = 120; // Vuruş mesafesi (pixel)
+                const range = 120;
                 if (!attacker.flipX) {
-                    // Sağa bakıyor
                     return (defender.pos.x > attacker.pos.x) &&
                         (defender.pos.x - attacker.pos.x < range) &&
                         (Math.abs(defender.pos.y - attacker.pos.y) < 100);
                 } else {
-                    // Sola bakıyor
                     return (defender.pos.x < attacker.pos.x) &&
                         (attacker.pos.x - defender.pos.x < range) &&
                         (Math.abs(defender.pos.y - attacker.pos.y) < 100);
@@ -346,8 +331,7 @@
             }
 
 
-            // --------- Model + View ---------
-            // CLASS DIŞINDA
+
             function canHit(attacker, defender) {
                 const range = 300;
                 if (typeof attacker.x !== "number" || typeof attacker.y !== "number" ||
@@ -363,7 +347,7 @@
             }
 
 
-            // --------- Model + View ---------
+
             class FightModel extends Multisynq.Model {
                 init() {
                     this.players = {};
@@ -401,7 +385,7 @@
                         }
                     }
                     this.publish(this.sessionId, "playersUpdated", { ...this.players });
-                    console.log(`[DEBUG] Model updated health for ${data.id}:`, this.players[data.id]?.health);
+
                 }
             }
             FightModel.register("FightModel");
@@ -420,7 +404,7 @@
                     window.myRole = (order[0] === this.viewId) ? "player1" : "player2";
                 }
                 updatePlayers(players) {
-                    // console.log("[UPDATEPLAYERS] players:", players);
+
                     window.state.players = players;
                     updateKaboomPlayers(players);
                 }
@@ -440,7 +424,7 @@
                     }
                 }
             }
-            // ---------------------------------
+
 
             function updateKaboomPlayers(players) {
                 if (!players || typeof players !== 'object' || !window.myRole) return;
@@ -449,23 +433,11 @@
 
                 if (!player1Spawned) {
                     player1 = makePlayer(200, groundY, 16, 42, 4, "player1");
-                    // console.log("[SPAWN] player1 created, area:", player1.area, "pos:", player1.pos);
+
                     player1.use(sprite(player1.sprites.idle)); player1.play("idle");
                     player1.isPlayer1 = true;
                     player1.onUpdate(() => resetAfterJump(player1));
-                    // player1.onCollide("player2attackHitbox", () => {
-                    //     console.log("testtttttttttttttttttttttttttt");
-                    //     if (window.myRole !== "player1") return;
-                    //     if (gameOver || !gameStarted) return;
-                    //     if (player1.health > 0) {
-                    //         player1.health -= 50;
-                    //         viewInstance.sendAction({
-                    //             x: player1.pos.x, y: player1.pos.y,
-                    //             anim: player1.curAnim(), flip: player1.flipX,
-                    //             health: player1.health
-                    //         });
-                    //     }
-                    // });
+
                     player1Spawned = true;
                 }
                 if (!player2Spawned) {
@@ -473,58 +445,37 @@
                     player2.use(sprite(player2.sprites.idle)); player2.play("idle");
                     player2.flipX = true;
                     player2.onUpdate(() => resetAfterJump(player2));
-                    // player2.onCollide("player1attackHitbox", () => {
-                    //     if (window.myRole !== "player2") return;
-                    //     if (gameOver || !gameStarted) return;
-                    //     if (player2.health > 0) {
-                    //         player2.health -= 50;
-                    //         console.log("[COLLISION] player2 local health after damage:", player2.health);
-                    //         viewInstance.sendAction({
-                    //             x: player2.pos.x, y: player2.pos.y,
-                    //             anim: player2.curAnim(), flip: player2.flipX,
-                    //             health: player2.health
-                    //         });
-                    //     }
-                    // });
+
                     player2Spawned = true;
                 }
 
-                // 2 oyuncu varsa başlat
+
                 if (!gameStarted && ids.length === 2) startGame();
 
-                // --- Senkronizasyon ve health bar ---
+
                 for (let i = 0; i < 2; i++) {
                     const id = ids[i];
                     const s = players[id];
                     let p = (i === 0) ? player1 : player2;
                     if (!p || !s) continue;
-                    console.log(`[DEBUG] Update healthbar for player${i+1}: local health: ${p.health}, network health: ${s.health}`);
 
-                    // Sağlık güncellemesi öncesi
-                    // console.log(`[SYNC] ${i === 0 ? "player1" : "player2"} local health: ${p.health} / network health: ${s.health}`);
 
-                    // if (p.health !== s.health) {
-                    //     console.log(`[UPDATE] ${i === 0 ? "player1" : "player2"} health update: ${p.health} → ${s.health}`);
-                    // }
+
                     p.health = s.health ?? p.health;
 
                     let oldBar = i === 0 ? player1HealthBar.width : player2HealthBar.width;
-                    // if (oldBar !== p.health) {
-                    //     console.log(`[HEALTHBAR] ${(i === 0 ? "player1" : "player2")}HealthBar: ${oldBar} → ${p.health}`);
-                    // }
                     if (i === 0) player1HealthBar.width = (p.health / maxHealth) * healthBarWidth;
                     else player2HealthBar.width = (p.health / maxHealth) * healthBarWidth;
-                    console.log(`[DEBUG] Healthbar after update for player${i+1}: ${i === 0 ? player1HealthBar.width : player2HealthBar.width}`);
 
-                    // Pozisyonu sadece diğer oyuncudan güncelle
+
+
                     const isMe = ((window.myRole === "player1" && i === 0) || (window.myRole === "player2" && i === 1));
                     if (!isMe && s.x !== undefined && s.y !== undefined) {
-                        // Sadece karşı tarafın pozisyonunu güncelle!
+
                         p.pos.x = s.x;
                         p.pos.y = s.y;
                     }
 
-                    // Animasyon
                     if (s.anim && p.curAnim() !== s.anim) {
                         if (s.anim === "run") p.use(sprite(p.sprites.run));
                         else if (s.anim === "idle") p.use(sprite(p.sprites.idle));
@@ -533,7 +484,6 @@
                         p.play(s.anim);
                     }
 
-                    // Death animasyonu
                     if (p.health === 0 && p.curAnim() !== "death") {
                         p.use(sprite(p.sprites.death));
                         p.play("death");
@@ -541,7 +491,7 @@
                         declareWinner(winningText, player1, player2);
                     }
                     if (s.flip !== undefined && p.flipX !== s.flip) {
-                        console.log(`[DEBUG FLIP] Updating player${i+1} flipX: local: ${p.flipX}, network: ${s.flip}`);
+
                         p.flipX = s.flip;
                     }
 
@@ -549,11 +499,9 @@
 
 
             if (player1 && player2 && gameStarted && !gameOver) {
-                // Her iki oyuncunun networkteki güncel state'i
                 let p1state = players[window.playerOrder[0]];
                 let p2state = players[window.playerOrder[1]];
 
-                // Saldırı bittiğinde _alreadyHit flag'ini sıfırla
                 if (!p1state.isAttacking) player1._alreadyHit = false;
                 if (!p2state.isAttacking) player2._alreadyHit = false;
             }
@@ -608,16 +556,13 @@
                     if (e.key === "a") { 
                         run(me, -speed); 
                         viewInstance.sendAction({ x: me.pos.x, y: me.pos.y, anim: "run", flip: me.flipX });
-                        console.log(`[SEND ACTION] myId:${myId}, flip: ${me.flipX}`); 
+ 
                     }
                     if (e.key === "d") { 
                         run(me, speed); 
                         viewInstance.sendAction({ x: me.pos.x, y: me.pos.y, anim: "run", flip: me.flipX});
                     }
-                    // if (e.key === "w") { 
-                    //     makeJump(me); 
-                    //     viewInstance.sendAction({ x: me.pos.x, y: me.pos.y, anim: "jump", isJumping: true }); 
-                    // }
+
                     if (e.key === "f") { 
                         attack(me); 
                         viewInstance.sendAction({ x: me.pos.x, y: me.pos.y, anim: "attack", isAttacking: true }); 
@@ -634,7 +579,7 @@
                         resetPlayerToIdle(me);
                         viewInstance.sendAction({ x: me.pos.x, y: me.pos.y, anim: "idle", flip: me.flipX  });
                     }
-                    // f tuşu (attack) bırakıldıysa, saldırı state'ini sıfırla
+
                     if (e.key === "f") {
                         resetPlayerToIdle(me);
                         viewInstance.sendAction({ x: me.pos.x, y: me.pos.y, anim: "idle", isAttacking: false, flip: me.flipX });

@@ -125,10 +125,10 @@
         const enterMatchButton = document.getElementById('enterMatchButton');
         const transactionStatus = document.getElementById('transactionStatus');
 
-        // Contract configuration
+
         const CONTRACT_ADDRESS = '0x407D5c6D441e6f1028a00e18C3063CDffeF38A85';
 
-        // Check if MetaMask is installed
+
         function checkIfMetaMaskInstalled() {
             if (typeof window.ethereum !== 'undefined') {
                 return true;
@@ -138,7 +138,7 @@
             }
         }
 
-        // Connect to MetaMask and get wallet address
+
         async function connectWallet() {
             if (!checkIfMetaMaskInstalled()) {
                 return;
@@ -148,7 +148,7 @@
                 connectButton.disabled = true;
                 connectButton.textContent = 'Connecting...';
 
-                // Request account access
+
                 const accounts = await window.ethereum.request({ 
                     method: 'eth_requestAccounts' 
                 });
@@ -158,20 +158,17 @@
                     const isOnMonadNetwork = await checkMonadNetwork();
                     const networkName = await getNetworkName();
                     
-                    // Get match count if on Monad network
                     let matchCount = 0;
                     if (isOnMonadNetwork) {
                         matchCount = await getMyMatchCount();
                     }
                     
-                    // Display wallet info
                     let walletInfoHTML = `
                         <p>✅ Wallet Connected!</p>
                         <p>Address: ${walletAddress}</p>
                         <p>Network: ${networkName}</p>
                     `;
 
-                    // Check if user is on Monad testnet
                     if (!isOnMonadNetwork) {
                         walletInfoHTML += `
                             <p style="color: #ff6b6b; margin-top: 1rem; font-weight: bold;">
@@ -187,7 +184,7 @@
                             <p style="color: #4CAF50; margin-top: 1rem; font-weight: bold;">
                                 ✅ Connected to Monad Testnet!
                             </p>
-                            <p style="color: #B13BFF; margin-top: 0.5rem; font-weight: bold;">
+                            <p style="color: #000000; margin-top: 0.5rem; font-weight: bold;">
                                 🥊 Match Count: ${matchCount}  <br><br>
                                 a,d move left and right  <br><br>
                                 f attack
@@ -198,15 +195,13 @@
 
                     walletInfo.innerHTML = walletInfoHTML;
 
-                    // Change button text
+
                     connectButton.textContent = 'Connected';
                     connectButton.style.backgroundColor = '#45a049';
 
-                    console.log('Wallet connected:', walletAddress);
-                    console.log('On Monad network:', isOnMonadNetwork);
+
                     
-                    // You can redirect to game here if needed
-                    // setTimeout(() => window.location.href = 'game.html', 2000);
+
                 }
 
             } catch (error) {
@@ -217,7 +212,7 @@
             }
         }
 
-        // Get network name
+
         async function getNetworkName() {
             try {
                 const chainId = await window.ethereum.request({ method: 'eth_chainId' });
@@ -237,7 +232,6 @@
             }
         }
 
-        // Check if user is on Monad testnet
         async function checkMonadNetwork() {
             try {
                 const chainId = await window.ethereum.request({ method: 'eth_chainId' });
@@ -247,11 +241,10 @@
             }
         }
 
-        // Get user's match count from contract
+
         async function getMyMatchCount() {
             try {
-                console.log('Getting match count for address:', window.ethereum.selectedAddress);
-                console.log('Contract address:', CONTRACT_ADDRESS);
+
                 
                 // Use ethers.js with correct ABI
                 const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -279,12 +272,9 @@
                 
                 const contract = new ethers.Contract(CONTRACT_ADDRESS, contractABI, provider);
                 
-                console.log('Calling getCounterOf() with address:', window.ethereum.selectedAddress);
                 const result = await contract.getCounterOf(window.ethereum.selectedAddress);
-                console.log('Raw result:', result.toString());
                 
                 const matchCount = result.toNumber();
-                console.log('Parsed match count:', matchCount);
                 return matchCount;
                 
             } catch (error) {
@@ -293,23 +283,22 @@
             }
         }
 
-        // Listen for account changes
+
         if (typeof window.ethereum !== 'undefined') {
             window.ethereum.on('accountsChanged', async function (accounts) {
                 if (accounts.length === 0) {
-                    // User disconnected wallet
+    
                     walletInfo.innerHTML = '';
                     connectButton.textContent = 'Connect MetaMask';
                     connectButton.disabled = false;
                     connectButton.style.backgroundColor = '#4CAF50';
                     enterMatchButton.style.display = 'none';
                 } else {
-                    // Account changed - reconnect and show match count
                     await connectWallet();
                 }
             });
 
-            // Listen for network changes
+
             window.ethereum.on('chainChanged', async function (chainId) {
                 const networkName = await getNetworkName();
                 const isOnMonadNetwork = chainId === '0x279f';
@@ -318,7 +307,7 @@
                 if (addressElement) {
                     const address = addressElement.textContent.split(': ')[1];
                     
-                    // Get match count if on Monad network
+    
                     let matchCount = 0;
                     if (isOnMonadNetwork) {
                         matchCount = await getMyMatchCount();
@@ -358,7 +347,7 @@
             });
         }
 
-        // Enter Match Function
+
         async function enterMatch() {
             if (!checkIfMetaMaskInstalled()) {
                 return;
@@ -384,16 +373,15 @@
                 
                 const contract = new ethers.Contract(CONTRACT_ADDRESS, contractABI, signer);
                 
-                console.log('Calling increase()...');
+
                 const tx = await contract.increase();
                 
                 transactionStatus.innerHTML = '<p style="color: #ffa500;">⏳ Waiting for transaction confirmation...</p>';
 
-                // Wait for transaction to be mined
+
                 const receipt = await tx.wait();
 
                 if (receipt.status === 1) {
-                    // Get updated match count
                     const newMatchCount = await getMyMatchCount();
                     
                     transactionStatus.innerHTML = `
@@ -404,13 +392,13 @@
                     enterMatchButton.textContent = 'Match Entered!';
                     enterMatchButton.style.backgroundColor = '#45a049';
                     
-                    // Update the match count display
+
                     const matchCountElement = walletInfo.querySelector('p:last-child');
                     if (matchCountElement && matchCountElement.textContent.includes('Match Count:')) {
                         matchCountElement.innerHTML = `<span style="color: #4CAF50; margin-top: 0.5rem; font-weight: bold;">🥊 Match Count: ${newMatchCount}</span>`;
                     }
                     
-                    // Generate random room ID and redirect to game after 3 seconds
+
                     setTimeout(() => {
                         const roomId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
                         window.location.href = `game.html?room-id=${roomId}`;
@@ -429,10 +417,10 @@
 
 
 
-        // Connect button click event
+
         connectButton.addEventListener('click', connectWallet);
 
-        // Enter match button click event
+
         enterMatchButton.addEventListener('click', enterMatch);
     </script>
 </body>
