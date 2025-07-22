@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Multiplayer Canvas Debug Demo</title>
+    <meta name="viewport" content="width=600">
+    <style>
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            width: 100vw !important;
+            height: 100vh !important;
+        }
+    </style>
+    <script src="https://unpkg.com/kaboom@3000.0.0-beta.2/dist/kaboom.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+        function isMobileOrTablet() {
+            return window.innerWidth < 900 || window.innerHeight < 600;
+        }
+
+        if (isMobileOrTablet()) {
+            document.body.innerHTML = `<div style="display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;background:#1a1a1a;">
+                <span style="color:#fff;font-size:2rem;text-align:center;max-width:90vw;">
+                    For a better experience, please use a computer screen.
+                </span>
+            </div>`;
+        } else {
+            // Multisynq ve oyun scriptlerin yüklenmesini burada başlat
+            (function() {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/@multisynq/client@latest/bundled/multisynq-client.min.js';
+                script.onload = function() {
+                    if (document.readyState === "loading") {
+                        document.addEventListener('DOMContentLoaded', startMultiplayerDemo);
+                    } else {
+                        startMultiplayerDemo();
+                    }
+                };
+                document.head.appendChild(script);
+            })();
+        }
+    });
+
+
+        function startMultiplayerDemo() {
+            const API_KEY = "25A7NdUKjdU0QX6sSHfuW9Bow4UHqkndFumimY0njA";
+            const APP_ID = "com.multiplayer.demo";
+            const urlParams = new URLSearchParams(window.location.search);
+            const ROOM_ID = urlParams.get('room-id');
+            const PASSWORD = "multisynqdeneme";
+            const speed = 500;
+            const groundY = 492;
+
+            let myId = null;
+            let viewInstance = null;
+            let state = { players: {} };
+            window.state = state;
+            window.myRole = null;
+            window.playerOrder = [];
+            let lastLocalMoveTime = 0;
+            let isLocalMoving = false;
+
+
+            kaboom({
+                width: window.innerWidth,
+                height: window.innerHeight,
+                scale: 1,
+                debug: false
+            });
+
+
+
+            loadSprite("background", "assets/oak_woods_v1.0/background/background_layer_1.png");
+            loadSprite("trees", "assets/oak_woods_v1.0/background/background_layer_2.png");
+            loadSpriteAtlas("assets/oak_woods_v1.0/oak_woods_tileset.png", {
+                "ground-golden": { "x": 16, "y": 0, "width": 16, "height": 16 },
+                "deep-ground": { "x": 16, "y": 32, "width": 16, "height": 16 },
+                "ground-silver": { "x": 150, "y": 0, "width": 16, "height": 16 }
+            });
+
+            loadSprite("idle-player", "assets/player1/Sprites/Idle.png", {
+                sliceX: 4, sliceY: 1, anims: { "idle": { from: 0, to: 3, speed: 8, loop: true}}
+            });
+            loadSprite("run-player", "assets/player1/Sprites/Run.png", {
+                sliceX: 8, sliceY: 1, anims: { "run": { from: 0, to: 7, speed: 18}}
+            });
+            loadSprite("jump-player", "assets/player1/Sprites/Jump.png", {
+                sliceX: 2, sliceY: 1, anims: {"jump": { from: 0, to: 1, speed: 2, loop: true}}
+            });
+            loadSprite("attack-player", "assets/player1/Sprites/Attack1.png", {
+                sliceX: 4, sliceY: 1, anims: { "attack": { from: 0, to: 3, speed: 18}}
+            });
+            loadSprite("death-player", "assets/player1/Sprites/Death.png", {
+                sliceX: 7, sliceY: 1, anims: { "death": { from: 0, to: 6, speed: 10}}
+            });
+
+            loadSound("slash", "assets/sounds/slash.mp3");
+
+            // Oyuncu objeleri
+            let player1Spawned = false, player2Spawned = false;
+            let player1 = null, player2 = null;
+            let player1HealthBar, player2HealthBar;
+            let winningText, gameOver = false, gameStarted = false;
+            let lastPing = 0;
+            let pingValue = 0;
+            let lastFlipX = false;
+            const maxHealth = 500;
+            let healthBarWidth = Math.floor(window.innerWidth * 0.3); 
+
+
+            function makePlayer(posX, posY, width, height, scaleFactor, id) {
+                return add([
+                    pos(posX, posY),
+                    scale(scaleFactor),
+                    area({shape: new Rect(vec2(0), width, height)}),
+                    anchor("center"),
+                    body({stickToPlatform: true}),
+                    {
+                        health: 500,
+                        isCurrentlyJumping: false,
+                        sprites: {
+                            run: "run-player",
+                            idle: "idle-player",
+                            jump: "jump-player",
+                            attack: "attack-player",
+                            death: "death-player"
+                        },
+                        myId: id
+                    }
+                ]);
+            }
+
+            function setupScene() {
+                add([sprite("background"), scale(4)]);
+                add([sprite("trees"), scale(4)]);
+                addLevel([
+                    "","","","","","","","","",
+                    "------#######-----------",
+                    "dddddddddddddddddddddddd",
+                    "dddddddddddddddddddddddd"
+                ], {
+                    tileWidth: 16,
+                    tileHeight: 16,
+                    tiles: {
+                        "#": () => [sprite("ground-golden"), area(), body({isStatic: true})],
+                        "-": () => [sprite("ground-silver"), area(), body({isStatic: true})],
+                        "d": () => [sprite("deep-ground"), area(), body({isStatic: true})]
+                    }
+                }).use(scale(4));
+                add([rect(16, 720), area(), body({isStatic: true}), pos(-20,0)]);
+                add([rect(16, 720), area(), body({isStatic: true}), pos(1280,0)]);
+
+                // left invisible wall
+                add([
+                    rect(16, 720),
+                    area(),
+                    body({isStatic: true}),
+                    pos(-20,0)
+                ])
+
+                // right invisible wall
+                add([
+                    rect(16, 720),
+                    area(),
+                    body({isStatic: true}),
+                    pos(1280,0)
+                ])
+                player1HealthBar = add([
+                    rect(healthBarWidth, 20),
+                    area(),
+                    outline(3),
+                    pos(50, 20),
+                    color(200,0,0)
+                ]);
+                player2HealthBar = add([
+                    rect(healthBarWidth, 20),
+                    area(),
+                    outline(3),
+                    pos(window.innerWidth - healthBarWidth - 50, 20), // Sağdan 50px boşluk bırak
+                    color(200,0,0)
+                ]);
+
+
+                add([pos(50,50), text("player1", { font: "monospace", size: 24, color: rgb(0,0,0) })]);
+                add([pos(window.innerWidth-150,50), text("player2", { font: "monospace", size: 24, color: rgb(0,0,0) })]);
+                winningText = add([
+                    text(""),
+                    area(),
+                    anchor("center"),
+                    pos(center())
+                ]);
+
+                const pingLabel = add([
+                    text("Ping: ... ms", {
+                        size: 32,
+                    }),
+                    pos(50, 80),
+                    { value: "..." }
+                ]);
+                window.pingLabel = pingLabel;
+
+            }
+
+            function declareWinner(winningText, p1, p2) {
+                if (p1.health > 0 && p2.health > 0 || p1.health === 0 && p2.health === 0) {
+                    winningText.text = "Tie!";
+                } else if (p1.health > 0 && p2.health === 0) {
+                    winningText.text = "Player 1 won!";
+                } else {
+                    winningText.text = "Player 2 won!";
+                }
+            }
+
+            function startGame() {
+                if (gameStarted) return;
+                gameStarted = true;
+                if (player1) {
+                    player1.pos.x = 200; player1.pos.y = groundY;
+                    player1.health = 500;
+                    player1HealthBar.width = (player1.health / maxHealth) * healthBarWidth;
+                }
+                if (player2) {
+                    player2.pos.x = 1000; player2.pos.y = groundY;
+                    player2.health = 500;
+                    player2HealthBar.width = (player2.health / maxHealth) * healthBarWidth;
+                }
+                if (viewInstance && window.myRole) {
+                    if (window.myRole === "player1") {
+                        viewInstance.sendAction({
+                            x: 200, y: groundY, health: 500, anim: "idle", flip: false
+                        });
+                    } else {
+                        viewInstance.sendAction({
+                            x: 1000, y: groundY, health: 500, anim: "idle", flip: true
+                        });
+                    }
+                }
+                winningText.text = "FIGHT!";
+                setTimeout(() => winningText.text = "", 2000);
+            }
+
+            function makeJump(player) {
+                if (player.health === 0) return;
+                if (player.isGrounded()) {
+                    const currentFlip = player.flipX;
+                    player.jump();
+                    player.use(sprite(player.sprites.jump));
+                    player.flipX = currentFlip;
+                    player.play("jump");
+                    player.isCurrentlyJumping = true;
+                }
+            }
+
+            function attack(player) {
+                if (player.health === 0) return;
+                const currentFlip = player.flipX;
+                if (player.curAnim() !== "attack") {
+                    play("slash", { loop: false, paused: false });
+                    player.use(sprite(player.sprites.attack));
+                    player.flipX = currentFlip;
+                    const slashX = player.pos.x + 30;
+                    const slashXFlipped = player.pos.x - 350;
+                    const slashY = player.pos.y - 200;
+                    lastFlipX = player.flipX;
+                    let tag = (window.myRole === "player1" ? "player1attackHitbox" : "player2attackHitbox");
+                    // let hitbox = add([
+                    //     rect(300,300),
+                    //     area(),
+                    //     pos(currentFlip ? slashXFlipped : slashX, slashY),
+                    //     opacity(0),
+                    //     tag
+                    // ]);
+
+                    // wait(5, () => hitbox.destroy()); // 1 saniye kalsın
+                    // player1.onCollide("testhitbox", () => {
+                    //         console.log("BASİT COLLISION ÇALIŞTI!");
+                    //     });
+
+                    // console.log(`[ATTACK] Hitbox created: ${tag} at (${currentFlip ? slashXFlipped : slashX}, ${slashY})`);
+                    player.play("attack", {
+                        onEnd: () => {
+                            // hitbox.destroy();
+                            resetPlayerToIdle(player);
+                            // Animasyon bitince saldırı bitmiş say, state'i sıfırla
+                            if (viewInstance && window.myRole) {
+                                viewInstance.sendAction({ x: player.pos.x, y: player.pos.y, anim: "idle", isAttacking: false });
+                            }
+                        }
+                    });
+                    if (viewInstance && window.myRole) {
+                        viewInstance.sendAction({ x: player.pos.x, y: player.pos.y, anim: "attack", isAttacking: true, flip: player.flipX });
+                    }
+                }
+            }
+
+
+            function run(player, dx) {
+                if (player.health === 0) return;
+                if (player.curAnim() !== "run" && !player.isCurrentlyJumping) {
+                    player.use(sprite(player.sprites.run));
+                    player.play("run");
+                }
+                isLocalMoving = true;
+                player.move(dx, 0);
+                player.flipX = dx < 0;
+                lastFlipX = player.flipX;
+                lastLocalMoveTime = Date.now();
+            }
+
+            function resetPlayerToIdle(player) {
+                player.use(sprite(player.sprites.idle));
+                player.play("idle");
+                isLocalMoving = false;
+                player.flipX = lastFlipX;
+            }
+
+            function resetAfterJump(player) {
+                if (player.isGrounded() && player.isCurrentlyJumping) {
+                    player.isCurrentlyJumping = false;
+                    if (player.curAnim() !== "idle") {
+                        resetPlayerToIdle(player);
+                    }
+                }
+            }
+
+            function playerCanHitOpponent(attacker, defender) {
+                const range = 120; // Vuruş mesafesi (pixel)
+                if (!attacker.flipX) {
+                    // Sağa bakıyor
+                    return (defender.pos.x > attacker.pos.x) &&
+                        (defender.pos.x - attacker.pos.x < range) &&
+                        (Math.abs(defender.pos.y - attacker.pos.y) < 100);
+                } else {
+                    // Sola bakıyor
+                    return (defender.pos.x < attacker.pos.x) &&
+                        (attacker.pos.x - defender.pos.x < range) &&
+                        (Math.abs(defender.pos.y - attacker.pos.y) < 100);
+                }
+            }
+
+
+            // --------- Model + View ---------
+            // CLASS DIŞINDA
+            function canHit(attacker, defender) {
+                const range = 300;
+                if (typeof attacker.x !== "number" || typeof attacker.y !== "number" ||
+                    typeof defender.x !== "number" || typeof defender.y !== "number") return false;
+
+                const flip = (attacker.flip !== undefined) ? attacker.flip : false;
+                if (Math.abs(defender.y - attacker.y) > 100) return false;
+                if (!flip) {
+                    return (defender.x > attacker.x) && ((defender.x - attacker.x) < range);
+                } else {
+                    return (defender.x < attacker.x) && ((attacker.x - defender.x) < range);
+                }
+            }
+
+
+            // --------- Model + View ---------
+            class FightModel extends Multisynq.Model {
+                init() {
+                    this.players = {};
+                    this.playerOrder = [];
+                    this.subscribe(this.sessionId, "playerAction", this.handlePlayerAction);
+                    this.subscribe(this.sessionId, "playerJoined", this.handlePlayerJoined);
+                }
+                handlePlayerJoined(data) {
+                    if (!this.playerOrder.includes(data.id)) {
+                        this.playerOrder.push(data.id);
+                        this.publish(this.sessionId, "playerOrderUpdated", this.playerOrder);
+                    }
+                }
+                handlePlayerAction(data) {
+                    this.players[data.id] = { ...this.players[data.id], ...data.state };
+                    if (data.state.ping) {
+                        this.publish(this.sessionId, "customPing", {
+                            pingResponse: true,
+                            pingTimestamp: data.state.pingTimestamp,
+                            targetId: data.id
+                        });
+                        return;
+                    }
+                    if (data.state.isAttacking) {
+                        const attackerId = data.id;
+                        const defenderId = Object.keys(this.players).find(pid => pid !== attackerId);
+                        if (defenderId && this.players[defenderId]) {
+                            const attacker = this.players[attackerId];
+                            const defender = this.players[defenderId];
+                            if (attacker && defender && canHit(attacker, defender)) {
+                                if ((defender.health ?? 500) > 0) {
+                                    this.players[defenderId].health = (defender.health ?? 500) - 50;
+                                }
+                            }
+                        }
+                    }
+                    this.publish(this.sessionId, "playersUpdated", { ...this.players });
+                    console.log(`[DEBUG] Model updated health for ${data.id}:`, this.players[data.id]?.health);
+                }
+            }
+            FightModel.register("FightModel");
+
+
+            class FightView extends Multisynq.View {
+                constructor(model) {
+                    super(model);
+                    this.subscribe(this.sessionId, "playersUpdated", this.updatePlayers.bind(this));
+                    this.subscribe(this.sessionId, "playerOrderUpdated", this.setPlayerOrder.bind(this));
+                    this.subscribe(this.sessionId, "customPing", this.handleCustomPing.bind(this));
+                    this.model = model;
+                }
+                setPlayerOrder(order) {
+                    window.playerOrder = order;
+                    window.myRole = (order[0] === this.viewId) ? "player1" : "player2";
+                }
+                updatePlayers(players) {
+                    // console.log("[UPDATEPLAYERS] players:", players);
+                    window.state.players = players;
+                    updateKaboomPlayers(players);
+                }
+
+                sendAction(state) {
+                    this.publish(this.sessionId, "playerAction", { id: this.viewId, state });
+                }
+
+                handleCustomPing(data) {
+                    if (data.pingResponse && data.pingTimestamp) {
+                        pingValue = Math.round(performance.now() - data.pingTimestamp);
+                        if (window.pingLabel) {
+                            window.pingLabel.text = "Ping: " + pingValue + " ms";
+                            window.pingLabel.color = pingValue > 100 ? rgb(255,0,0) : rgb(255,255,255);
+                        }
+
+                    }
+                }
+            }
+            // ---------------------------------
+
+            function updateKaboomPlayers(players) {
+                if (!players || typeof players !== 'object' || !window.myRole) return;
+                const ids = window.playerOrder;
+                if (!ids || ids.length !== 2) return;
+
+                if (!player1Spawned) {
+                    player1 = makePlayer(200, groundY, 16, 42, 4, "player1");
+                    // console.log("[SPAWN] player1 created, area:", player1.area, "pos:", player1.pos);
+                    player1.use(sprite(player1.sprites.idle)); player1.play("idle");
+                    player1.isPlayer1 = true;
+                    player1.onUpdate(() => resetAfterJump(player1));
+                    // player1.onCollide("player2attackHitbox", () => {
+                    //     console.log("testtttttttttttttttttttttttttt");
+                    //     if (window.myRole !== "player1") return;
+                    //     if (gameOver || !gameStarted) return;
+                    //     if (player1.health > 0) {
+                    //         player1.health -= 50;
+                    //         viewInstance.sendAction({
+                    //             x: player1.pos.x, y: player1.pos.y,
+                    //             anim: player1.curAnim(), flip: player1.flipX,
+                    //             health: player1.health
+                    //         });
+                    //     }
+                    // });
+                    player1Spawned = true;
+                }
+                if (!player2Spawned) {
+                    player2 = makePlayer(1000, groundY, 16, 42, 4, "player2");
+                    player2.use(sprite(player2.sprites.idle)); player2.play("idle");
+                    player2.flipX = true;
+                    player2.onUpdate(() => resetAfterJump(player2));
+                    // player2.onCollide("player1attackHitbox", () => {
+                    //     if (window.myRole !== "player2") return;
+                    //     if (gameOver || !gameStarted) return;
+                    //     if (player2.health > 0) {
+                    //         player2.health -= 50;
+                    //         console.log("[COLLISION] player2 local health after damage:", player2.health);
+                    //         viewInstance.sendAction({
+                    //             x: player2.pos.x, y: player2.pos.y,
+                    //             anim: player2.curAnim(), flip: player2.flipX,
+                    //             health: player2.health
+                    //         });
+                    //     }
+                    // });
+                    player2Spawned = true;
+                }
+
+                // 2 oyuncu varsa başlat
+                if (!gameStarted && ids.length === 2) startGame();
+
+                // --- Senkronizasyon ve health bar ---
+                for (let i = 0; i < 2; i++) {
+                    const id = ids[i];
+                    const s = players[id];
+                    let p = (i === 0) ? player1 : player2;
+                    if (!p || !s) continue;
+                    console.log(`[DEBUG] Update healthbar for player${i+1}: local health: ${p.health}, network health: ${s.health}`);
+
+                    // Sağlık güncellemesi öncesi
+                    // console.log(`[SYNC] ${i === 0 ? "player1" : "player2"} local health: ${p.health} / network health: ${s.health}`);
+
+                    // if (p.health !== s.health) {
+                    //     console.log(`[UPDATE] ${i === 0 ? "player1" : "player2"} health update: ${p.health} → ${s.health}`);
+                    // }
+                    p.health = s.health ?? p.health;
+
+                    let oldBar = i === 0 ? player1HealthBar.width : player2HealthBar.width;
+                    // if (oldBar !== p.health) {
+                    //     console.log(`[HEALTHBAR] ${(i === 0 ? "player1" : "player2")}HealthBar: ${oldBar} → ${p.health}`);
+                    // }
+                    if (i === 0) player1HealthBar.width = (p.health / maxHealth) * healthBarWidth;
+                    else player2HealthBar.width = (p.health / maxHealth) * healthBarWidth;
+                    console.log(`[DEBUG] Healthbar after update for player${i+1}: ${i === 0 ? player1HealthBar.width : player2HealthBar.width}`);
+
+                    // Pozisyonu sadece diğer oyuncudan güncelle
+                    const isMe = ((window.myRole === "player1" && i === 0) || (window.myRole === "player2" && i === 1));
+                    if (!isMe && s.x !== undefined && s.y !== undefined) {
+                        // Sadece karşı tarafın pozisyonunu güncelle!
+                        p.pos.x = s.x;
+                        p.pos.y = s.y;
+                    }
+
+                    // Animasyon
+                    if (s.anim && p.curAnim() !== s.anim) {
+                        if (s.anim === "run") p.use(sprite(p.sprites.run));
+                        else if (s.anim === "idle") p.use(sprite(p.sprites.idle));
+                        else if (s.anim === "jump") p.use(sprite(p.sprites.jump));
+                        else if (s.anim === "attack") p.use(sprite(p.sprites.attack));
+                        p.play(s.anim);
+                    }
+
+                    // Death animasyonu
+                    if (p.health === 0 && p.curAnim() !== "death") {
+                        p.use(sprite(p.sprites.death));
+                        p.play("death");
+                        gameOver = true;
+                        declareWinner(winningText, player1, player2);
+                    }
+                    if (s.flip !== undefined && p.flipX !== s.flip) {
+                        console.log(`[DEBUG FLIP] Updating player${i+1} flipX: local: ${p.flipX}, network: ${s.flip}`);
+                        p.flipX = s.flip;
+                    }
+
+                }
+
+
+            if (player1 && player2 && gameStarted && !gameOver) {
+                // Her iki oyuncunun networkteki güncel state'i
+                let p1state = players[window.playerOrder[0]];
+                let p2state = players[window.playerOrder[1]];
+
+                // Saldırı bittiğinde _alreadyHit flag'ini sıfırla
+                if (!p1state.isAttacking) player1._alreadyHit = false;
+                if (!p2state.isAttacking) player2._alreadyHit = false;
+            }
+
+            }
+
+
+
+
+            Multisynq.Session.join({
+                apiKey: API_KEY,
+                appId: APP_ID,
+                name: ROOM_ID,
+                password: PASSWORD,
+                model: FightModel,
+                view: FightView
+            }).then(session => {
+                viewInstance = session.view;
+                myId = session.view.viewId;
+
+                setInterval(() => {
+                    if (viewInstance) {
+                        lastPing = performance.now();
+                        viewInstance.sendAction({ ping: true, pingTimestamp: lastPing });
+                    }
+                }, 1000);
+
+                setupScene();
+                setGravity(1200);
+
+                viewInstance.publish(viewInstance.sessionId, "playerJoined", { id: myId });
+
+                setTimeout(() => {
+                    if (viewInstance && myId && window.myRole) {
+                        viewInstance.sendAction({
+                            x: (window.myRole === "player1") ? 200 : 1000,
+                            y: groundY,
+                            health: 500,
+                            anim: "idle",
+                            flip: (window.myRole === "player2"),
+                        });
+                    }
+                }, 1000);
+
+                window.addEventListener('keydown', e => {
+                    if (gameOver || !gameStarted || !viewInstance || !window.state.players || !window.myRole) return;
+                    const ids = window.playerOrder;
+                    if (!ids || ids.length !== 2) return;
+                    const isPlayer1 = (window.myRole === "player1");
+                    const me = isPlayer1 ? player1 : player2;
+                    if (!me) return;
+                    if (e.key === "a") { 
+                        run(me, -speed); 
+                        viewInstance.sendAction({ x: me.pos.x, y: me.pos.y, anim: "run", flip: me.flipX });
+                        console.log(`[SEND ACTION] myId:${myId}, flip: ${me.flipX}`); 
+                    }
+                    if (e.key === "d") { 
+                        run(me, speed); 
+                        viewInstance.sendAction({ x: me.pos.x, y: me.pos.y, anim: "run", flip: me.flipX});
+                    }
+                    // if (e.key === "w") { 
+                    //     makeJump(me); 
+                    //     viewInstance.sendAction({ x: me.pos.x, y: me.pos.y, anim: "jump", isJumping: true }); 
+                    // }
+                    if (e.key === "f") { 
+                        attack(me); 
+                        viewInstance.sendAction({ x: me.pos.x, y: me.pos.y, anim: "attack", isAttacking: true }); 
+                    }
+                });
+                window.addEventListener('keyup', e => {
+                    if (gameOver || !gameStarted || !viewInstance || !window.state.players || !window.myRole) return;
+                    const ids = window.playerOrder;
+                    if (!ids || ids.length !== 2) return;
+                    const isPlayer1 = (window.myRole === "player1");
+                    const me = isPlayer1 ? player1 : player2;
+                    if (!me) return;
+                    if (["a", "d"].includes(e.key)) {
+                        resetPlayerToIdle(me);
+                        viewInstance.sendAction({ x: me.pos.x, y: me.pos.y, anim: "idle", flip: me.flipX  });
+                    }
+                    // f tuşu (attack) bırakıldıysa, saldırı state'ini sıfırla
+                    if (e.key === "f") {
+                        resetPlayerToIdle(me);
+                        viewInstance.sendAction({ x: me.pos.x, y: me.pos.y, anim: "idle", isAttacking: false, flip: me.flipX });
+                    }
+                });
+            }).catch(e => {
+                console.error("Multisynq Session Join Error:", e);
+            });
+        }
+    </script>
+</head>
+<body>
+</body>
+</html>
