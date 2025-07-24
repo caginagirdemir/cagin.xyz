@@ -412,6 +412,7 @@
                 }
 
                 handlePingResponse(data) {
+                    console.log("PING EVENT GELDİ", data);
                     if (data.pingTimestamp) {
                         pingValue = Math.round(performance.now() - data.pingTimestamp);
                         if (window.pingLabel) {
@@ -518,7 +519,7 @@
             }).then(session => {
                 viewInstance = session.view;
                 myId = session.view.viewId;
-
+                viewInstance.subscribe(viewInstance.viewId, "pingResponse", viewInstance.handlePingResponse.bind(viewInstance));
                 setInterval(() => {
                     if (viewInstance) {
                         lastPing = performance.now();
