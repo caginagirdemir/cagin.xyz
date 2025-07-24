@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>devnads fight club</title>
+    <title>Multiplayer Canvas Debug Demo</title>
     <meta name="viewport" content="width=600">
     <style>
         html, body {
@@ -354,6 +354,7 @@
                     this.playerOrder = [];
                     this.subscribe(this.sessionId, "playerAction", this.handlePlayerAction);
                     this.subscribe(this.sessionId, "playerJoined", this.handlePlayerJoined);
+                    this.subscribe(this.viewId, "pingResponse", this.handlePingResponse.bind(this));
                 }
                 handlePlayerJoined(data) {
                     if (!this.playerOrder.includes(data.id)) {
@@ -364,10 +365,8 @@
                 handlePlayerAction(data) {
                     this.players[data.id] = { ...this.players[data.id], ...data.state };
                     if (data.state.ping) {
-                        this.publish(this.sessionId, "customPing", {
-                            pingResponse: true,
-                            pingTimestamp: data.state.pingTimestamp,
-                            targetId: data.id
+                        this.publish(data.id, "pingResponse", {
+                            pingTimestamp: data.state.pingTimestamp
                         });
                         return;
                     }
@@ -396,7 +395,6 @@
                     super(model);
                     this.subscribe(this.sessionId, "playersUpdated", this.updatePlayers.bind(this));
                     this.subscribe(this.sessionId, "playerOrderUpdated", this.setPlayerOrder.bind(this));
-                    this.subscribe(this.sessionId, "customPing", this.handleCustomPing.bind(this));
                     this.model = model;
                 }
                 setPlayerOrder(order) {
@@ -413,14 +411,13 @@
                     this.publish(this.sessionId, "playerAction", { id: this.viewId, state });
                 }
 
-                handleCustomPing(data) {
-                    if (data.pingResponse && data.pingTimestamp) {
+                handlePingResponse(data) {
+                    if (data.pingTimestamp) {
                         pingValue = Math.round(performance.now() - data.pingTimestamp);
                         if (window.pingLabel) {
                             window.pingLabel.text = "Ping: " + pingValue + " ms";
                             window.pingLabel.color = pingValue > 100 ? rgb(255,0,0) : rgb(255,255,255);
                         }
-
                     }
                 }
             }
