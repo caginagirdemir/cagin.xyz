@@ -354,7 +354,6 @@
                     this.playerOrder = [];
                     this.subscribe(this.sessionId, "playerAction", this.handlePlayerAction);
                     this.subscribe(this.sessionId, "playerJoined", this.handlePlayerJoined);
-                    this.subscribe(this.viewId, "pingResponse", this.handlePingResponse.bind(this));
                 }
                 handlePlayerJoined(data) {
                     if (!this.playerOrder.includes(data.id)) {
