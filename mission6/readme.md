@@ -1,6 +1,6 @@
 # Devnads Fight Club
 
-![Game Screenshot](Gv9KZ2pXcAAqXJk.png)
+![Game Screenshot](gamess.png)
 
 **Devnads Fight Club** is a pixel-art multiplayer fighting game built with **Kaboom.js**, **Multisynq**, and **Ethers.js**. Players connect using their MetaMask wallets and battle each other in real-time after entering a match, which is recorded on the Monad Testnet blockchain.
 
@@ -25,7 +25,7 @@
 - `game.html`:  
   The core game page. It handles all visuals, gameplay logic, synchronization, and animation using Kaboom.js and Multisynq.
 
-- `Gv9KZ2pXcAAqXJk.png`:  
+- `gamess.png`:  
   A screenshot of the in-game battle view, showing two characters, health bars, and the background.
 
 ---
