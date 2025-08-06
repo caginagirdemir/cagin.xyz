@@ -30,7 +30,9 @@
               </tr>
         </thead>
         <tbody id="leaderboard-body">
-          
+            <div class="spinner-border text-light" role="status">
+              
+            </div>
         </tbody>
       </table>
     </div>
@@ -87,7 +89,7 @@
         });
   
       } catch (err) {
-        console.error("Score çekme hatası:", err);
+        console.error("error:", err);
       }
     }
   
