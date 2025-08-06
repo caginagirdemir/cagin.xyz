@@ -199,7 +199,7 @@
 
 	
 	  playGameButton.addEventListener("click", async () => {
-		/*if (typeof window.ethereum !== "undefined") {
+		if (typeof window.ethereum !== "undefined") {
 			try {
 			  await switchToMonadTestnet();
               const provider = new window.ethers.providers.Web3Provider(window.ethereum);
@@ -207,7 +207,8 @@
 				signer = provider.getSigner();
 
 				
-				
+				gameView = new GameView(ctx, canvasSize, signer);
+			gameView.welcome();
 
               const address = await signer.getAddress();
 
@@ -216,11 +217,8 @@
 				console.error("Wallet connection error:", error);
 				alert("Unsuccessful metamask connection.");
 			  }
-			}*/
-
-			gameView = new GameView(ctx, canvasSize, signer);
-			gameView.welcome();
-		menuButton.className        =     'hide';
+			}
+		menuButton.className        =     '';
 		playGameButton.className    = 'hide';
 		leaderboardButton.className = 'hide';
 		mainLogo.className          = 'hide';
@@ -289,6 +287,7 @@
 	
 	  instructionsButton.addEventListener('click', () => {
 	    gameView.pause();
+	
 	    menuContainer.className = 'hide';
 	    aboutButton.className = 'hide';
 	    instructionsButton.className = 'hide';
@@ -334,11 +333,11 @@
 		this.signer = signer;
 		this.tokenContract = tokenContract;
 		this.gameContract = gameContract;
-		this.game = new Game({
-			canvasSize: this.canvasSize,
-			ctx: this.ctx,
-			gameView: this
-		});
+	  this.game = new Game({
+	    canvasSize: this.canvasSize,
+	    ctx: this.ctx,
+	    gameView: this
+	  });
 	  this.defender = this.game.defender;
 	  this.isPaused = false;
 	
@@ -359,10 +358,12 @@
 	  this.interval = setInterval(() => {
 	    if (!this.isPaused) {
 	      this.game.draw(this.ctx);
+	      this.addLivesText(this.ctx);
+	      this.addScoreText(this.ctx);
+	      this.addLevelText(this.ctx);
 	      this.moveDefender();
-	      this.moveOpponent();
-	      this.opponentFireRandomly();
 	      this.game.moveInvaders();
+	      this.game.addUfo();
 	      this.game.step();
 	    }
 	  }, 10);
@@ -506,6 +507,7 @@
 	};
 	
 	GameView.prototype.moveDefender = function() {
+	
 	  if (this.leftPressed) {
 	    this.defender.power([-3,0]);
 	  } else if (this.rightPressed) {
@@ -514,24 +516,6 @@
 	
 	  if (this.spacePressed) {
 	    this.defender.fireBullet();
-	  }
-	};
-
-	GameView.prototype.moveOpponent = function() {
-	  if (!this.game.opponent) return;
-	  const direction = Math.floor(Math.random() * 3) - 1;
-	  if (direction === -1) {
-	    this.game.opponent.power([-3, 0]);
-	  } else if (direction === 1) {
-	    this.game.opponent.power([3, 0]);
-	  }
-	};
-
-	GameView.prototype.opponentFireRandomly = function() {
-	  if (!this.game.opponent) return;
-	  // 2% chance to fire each frame
-	  if (Math.random() < 0.02) {
-	    this.game.opponent.fireBullet();
 	  }
 	};
 	
@@ -555,7 +539,6 @@
 	  this.ctx = options.ctx;
 	  this.stars = [];
 	  this.defender = null;
-	  this.opponent = null;
 	  this.defenderLives = 3;
 	  this.score = 0;
 	  this.level = 1;
@@ -573,7 +556,8 @@
 	
 	  this.addStars();
 	  this.addDefenderShip();
-	  this.addOpponentShip();
+	  this.addInvaderShips();
+	  this.addShields();
 	
 	  this.gameView.addKeyListeners();
 	};
@@ -599,22 +583,105 @@
 	    }));
 	  }
 	};
-
-	Game.prototype.addOpponentShip = function() {
-	  const opponent = new Ship ({
-	    name: 'opponent',
-	    game: this,
-	    canvasSize: this.canvasSize,
-	    img: document.getElementById('opponent'),
-	    radius: 16,
-	    pos: [
-	      (this.canvasSize[0] - 30) * .52,
-	      this.canvasSize[1] - 70
-	    ],
-	    vel: [0, 0],
-	    side: 'opponent'
-	  });
-	  this.opponent = opponent;
+	
+	Game.prototype.addUfo = function(ctx) {
+	  // Early return if a ufo is currently spawned
+	  if (this.ufo) { return; }
+	
+	  let spawnUfoChance = Math.random() * 700;
+	  let spawnPosition = Math.round(Math.random() * 10);
+	  let vel, spawnIdx;
+	
+	  if (spawnPosition > 5) {
+	    spawnIdx = 0;
+	    vel = [2, 0];
+	  } else {
+	    spawnIdx = 1;
+	    vel = [-2, 0];
+	  }
+	
+	  let spawnPositions = [-30, 930];
+	
+	  if (spawnUfoChance < 1) {
+	    let ufoImage = document.getElementById('ufo');
+	    let ufoShip = new Ship ({
+	      name: 'ufo',
+	      game: this,
+	      canvasSize: this.canvasSize,
+	      img: ufoImage,
+	      radius: 27,
+	      pos: [spawnPositions[spawnIdx], 45],
+	      vel: vel,
+	      side: 'invader'
+	    });
+	
+	    this.ufo = ufoShip;
+	  }
+	
+	};
+	
+	Game.prototype.addInvaderShips = function(level = 1) {
+	  let invaderShipName, invaderShipImage;
+	  let y = 100;
+	  let invaderIdx = 0;
+	  let vel = [0.27, 0];
+	  vel[0] += 0.05 * level;
+	
+	  for (let row = 0; row < 5; row++) {
+	    if (row < 1) {
+	      invaderShipName = 'invader';
+	      invaderShipImage = document.getElementById('invader-1');
+	    } else if (row < 3) {
+	      invaderShipName = 'soldier';
+	      invaderShipImage = document.getElementById('soldier-1');
+	    } else if (row > 2) {
+	      invaderShipName = 'grunt';
+	      invaderShipImage = document.getElementById('grunt-1');
+	    }
+	
+	    for (let x = 1; x < 14; x++, invaderIdx++) {
+	      let invaderShip = new Ship ({
+	        id: invaderIdx,
+	        name: invaderShipName,
+	        game: this,
+	        canvasSize: this.canvasSize,
+	        img: invaderShipImage,
+	        radius: 12,
+	        pos: [
+	          x * 35,
+	          y
+	        ],
+	        vel: vel,
+	        side: 'invader'
+	      });
+	      this.invaderShips.push(invaderShip);
+	    }
+	    y += 40;
+	  }
+	
+	};
+	
+	Game.prototype.addShields = function() {
+	  for (let i = 0, x = .05; i < 5; i++, x += 0.2) {
+	    let shieldPosX = this.canvasSize[0] * x + 14;
+	    let shieldPosY = this.canvasSize[1] * .8;
+	
+	    let shield = new Shield ({
+	      id: i,
+	      pos: [shieldPosX, shieldPosY],
+	      radius: 7,
+	      color: "#a0a09b",
+	      game: this
+	    });
+	
+	    shield.draw(this.ctx);
+	  }
+	};
+	
+	Game.prototype.refreshShields = function() {
+	  this.shieldPieces = [];
+	  this.shields = [];
+	  this.addShields();
 	};
 	
 	Game.prototype.addDefenderShip = function() {
@@ -685,7 +752,6 @@
 	  ctx.fillRect(0, 0, this.DIM_X, this.DIM_Y);
 	
 	  this.defender.draw(ctx);
-	  this.opponent.draw(ctx);
 	
 	  this.getAllObjects().forEach(object => {
 	    if (object == null) { return; }
@@ -703,8 +769,10 @@
 	  if (this.invaderShips.length === 0) {
 	    setTimeout(() => {
 	      if (this.invaderShips.length === 0) {
-	        // this.level++;
+	        this.refreshShields();
+	        this.level++;
 	        this.defenderLives++;
+	        this.addInvaderShips(this.level);
 	      }
 	    }, 1000);
 	  }
@@ -720,7 +788,6 @@
 	    this.bullets,
 	    this.invaderShips,
 	    this.defender,
-		this.opponent,
 	    this.shieldPieces,
 	    this.ufo,
 	    this.powerUps
@@ -873,29 +940,23 @@
 	};
 	
 	Ship.prototype.draw = function(ctx) {
-	  
-	let x = this.pos[0] - 12;
-	let y = this.pos[1] - 12;
+	  if (this.name === 'ufo') {
+	    let x = this.pos[0] - 26;
+	    let y = this.pos[1] - 3;
+	    ctx.drawImage(this.img, x, y, 53, 30);
+	    return;
+	  }
+	
+	  // subtract from pos to align the image with the radius
+	  let x = this.pos[0] - 12;
+	  let y = this.pos[1] - 12;
 	
 	  if (this.name === 'defender') {
 	    x -= 4;
 	    y -= 4;
 	    ctx.drawImage(this.img, x, y, 33, 33);
-	  } 
-
-
-	  if (this.name === 'opponent') {
-	    // Center of the opponent image
-	    let centerX = this.pos[0];
-	    let centerY = this.pos[1];
-	    ctx.save();
-	    ctx.translate(centerX, centerY);
-	    ctx.rotate(Math.PI); // 180 degrees
-		x = -12;
-	    y -= 50;
-	    ctx.drawImage(this.img, x, y, 33, 33);
-	    ctx.restore();
-	    return;
+	  } else {
+	    ctx.drawImage(this.img, x, y, 25, 25);
 	  }
 	
 	};
@@ -968,8 +1029,8 @@
 	Ship.prototype.deathImage = function() {
 	  if (this.name === 'defender') {
 	    this.img = document.getElementById('defender-death');
-	  } else if(this.name === 'opponent') {
-	    this.img = document.getElementById('opponent-death');
+	  } else {
+	    this.img = document.getElementById('ship-death');
 	  }
 	  this.draw(this.game.ctx);
 	};
@@ -1056,41 +1117,27 @@
 	  let bulletPosX = this.pos[0] - 2;
 	  let bulletPosY = this.pos[1] - 25;
 	  let bulletColor;
-	  let bulletVel;
 	
+	  let bulletVel;
 	  if (this.name === 'defender') {
 	    bulletVel = [0, -4];
 	    bulletColor = "#FF00FF";
-	    // Defender bullet starts just above the ship
-	    bulletPosY = this.pos[1] - this.radius;
-	  } else if (this.name === 'opponent') {
-	    bulletVel = [0, 4];
-	    bulletColor = "#00FF00"; // Green for opponent
-	    // Opponent bullet starts just below the ship
-	    bulletPosY = this.pos[1] + this.radius;
-	  } else if (this.name === 'grunt') {
-	    bulletVel = [0, 4];
-	    bulletColor = "#a2d3f5";
-	    bulletPosY += 30;
-	  } else if (this.name === 'soldier') {
-	    bulletVel = [0, 4];
-	    bulletColor = "#fdfd67";
-	    bulletPosY += 30;
-	  } else if (this.name === 'invader') {
-	    bulletVel = [0, 4];
-	    bulletColor = "#ff884e";
-	    bulletPosY += 30;
-	  } else if (this.name === 'ufo') {
-	    bulletVel = [0, 4];
-	    bulletColor = "red";
-	    bulletPosY += 30;
 	  } else {
 	    bulletVel = [0, 4];
-	    bulletColor = "#FFFFFF"; // fallback color
 	    bulletPosY += 30;
 	  }
 	
 	  let bulletPos = [bulletPosX, bulletPosY];
+	
+	  if (this.name === 'grunt') {
+	    bulletColor = "#a2d3f5";
+	  } else if (this.name === 'soldier') {
+	    bulletColor = "#fdfd67";
+	  } else if (this.name === 'invader') {
+	    bulletColor = "#ff884e";
+	  } else if (this.name === 'ufo') {
+	    bulletColor = "red";
+	  }
 	
 	  if (this.hasFiveGuns) {
 	    let bulletPositions = [
