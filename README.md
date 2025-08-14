@@ -1,3 +1,3 @@
 ## Gmonad
 
-Welcome to devnads.cagin.xyz
+Welcome to cagin.xyz
