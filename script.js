@@ -1454,7 +1454,7 @@ class DesktopPortfolio {
                     <a href="https://x.com/caginonthesky" class="social-link" target="_blank">
                       
                         <div class="social-details">
-                            <h4>LinkedIn</h4>
+                            <h4>Twitter</h4>
                             <p>https://x.com/caginonthesky</p>
                             <small>Twitter</small>
                         </div>
