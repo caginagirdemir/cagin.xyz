@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+		<title>MonadInvaders</title>
+		<style>
+html, body, #canvas {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+body {
+	color: white;
+	background-color: black;
+	overflow: hidden;
+	touch-action: none;
+	font-family: 'Arial', sans-serif;
+}
+
+#canvas {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+#canvas:focus {
+	outline: none;
+}
+
+#status, #status-splash, #status-progress {
+	position: absolute;
+	left: 0;
+	right: 0;
+}
+
+#status, #status-splash {
+	top: 0;
+	bottom: 0;
+}
+
+#status {
+	background-color: #242424;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	visibility: hidden;
+}
+
+#status-splash {
+	max-height: 100%;
+	max-width: 100%;
+	margin: auto;
+}
+
+#status-splash.show-image--false {
+	display: none;
+}
+
+#status-splash.fullsize--true {
+	height: 100%;
+	width: 100%;
+	object-fit: contain;
+}
+
+#status-splash.use-filter--false {
+	image-rendering: pixelated;
+}
+
+#status-progress, #status-notice {
+	display: none;
+}
+
+#status-progress {
+	bottom: 10%;
+	width: 50%;
+	margin: 0 auto;
+}
+
+#status-notice {
+	background-color: #5b3943;
+	border-radius: 0.5rem;
+	border: 1px solid #9b3943;
+	color: #e0e0e0;
+	font-family: 'Noto Sans', 'Droid Sans', Arial, sans-serif;
+	line-height: 1.3;
+	margin: 0 2rem;
+	overflow: hidden;
+	padding: 1rem;
+	text-align: center;
+	z-index: 1;
+}
+
+/* User data display */
+#user-info {
+	position: absolute;
+	top: 150px;
+	left: 10px;
+	background: rgba(0, 0, 0, 0);
+	padding: 15px;
+	border-radius: 10px;
+	border: 0ch solid #667eea;
+	z-index: 1000;
+	display: none;
+}
+
+#user-info.show {
+	display: block;
+}
+
+#user-info .username {
+	color: #4ade80;
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+
+#user-info .wallet {
+	color: #fbbf24;
+	font-family: monospace;
+	font-size: 0.9rem;
+}
+
+/* Loading overlay */
+#loading-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, 0.8);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	z-index: 9999;
+}
+
+#loading-overlay.hidden {
+	display: none;
+}
+
+.spinner {
+	width: 50px;
+	height: 50px;
+	border: 4px solid rgba(255, 255, 255, 0.3);
+	border-top: 4px solid #667eea;
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+	margin-bottom: 20px;
+}
+
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+	color: #667eea;
+	font-size: 1.2rem;
+	text-align: center;
+}
+		</style>
+		<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
+		<link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
+	</head>
+	<body>
+		<!-- Loading overlay -->
+		<div id="loading-overlay">
+			<div class="spinner"></div>
+			<div class="loading-text">Loading Monad Invaders...</div>
+		</div>
+
+		<!-- User info display -->
+		<div id="user-info">
+			<div class="username" id="username-display">Player: Loading...</div>
+			<div class="wallet" id="wallet-display">Wallet: Loading...</div>
+		</div>
+
+		<!-- Godot canvas -->
+		<canvas id="canvas">
+			Your browser does not support the canvas tag.
+		</canvas>
+
+		<noscript>
+			Your browser does not support JavaScript.
+		</noscript>
+
+		<div id="status">
+			<img id="status-splash" class="show-image--true fullsize--true use-filter--true" src="index.png" alt="">
+			<progress id="status-progress"></progress>
+			<div id="status-notice"></div>
+		</div>
+
+		<!-- Debugging and Error Handling -->
+		<script>
+			console.log('=== DEBUGGING START ===');
+			console.log('Document ready state:', document.readyState);
+			console.log('Current URL:', window.location.href);
+			console.log('User agent:', navigator.userAgent);
+			
+			// Check if React app is loaded
+			window.addEventListener('load', function() {
+				console.log('=== PAGE LOADED ===');
+				console.log('React app should be visible now');
+				
+				// Check for React elements
+				setTimeout(() => {
+					const reactRoot = document.getElementById('root');
+					console.log('React root element:', reactRoot);
+					
+					if (reactRoot) {
+						console.log('React root content:', reactRoot.innerHTML);
+					} else {
+						console.error('React root element not found!');
+					}
+					
+					// Check for any content
+					const bodyContent = document.body.innerHTML;
+					console.log('Body content length:', bodyContent.length);
+					console.log('Body has content:', bodyContent.length > 100);
+				}, 1000);
+			});
+			
+			// Error handling
+			window.addEventListener('error', function(e) {
+				console.error('=== GLOBAL ERROR ===');
+				console.error('Error:', e.error);
+				console.error('Message:', e.message);
+				console.error('Filename:', e.filename);
+				console.error('Lineno:', e.lineno);
+				console.error('Colno:', e.colno);
+			});
+			
+			// Unhandled promise rejection
+			window.addEventListener('unhandledrejection', function(e) {
+				console.error('=== UNHANDLED PROMISE REJECTION ===');
+				console.error('Reason:', e.reason);
+			});
+		</script>
+        
+		<!-- Godot engine script -->
+		<script>
+			// Dynamic script loading to avoid MIME type issues
+			function loadGodotScript() {
+				console.log('=== LOADING GODOT SCRIPT ===');
+				const script = document.createElement('script');
+				script.src = 'index.js';
+				script.type = 'text/javascript';
+				
+				script.onload = function() {
+					console.log('Godot engine script loaded successfully');
+				};
+				
+				script.onerror = function() {
+					console.error('Failed to load Godot engine script, trying fallback...');
+					// Fallback 1: try without type
+					const fallback1 = document.createElement('script');
+					fallback1.src = 'index.js';
+					fallback1.onload = function() {
+						console.log('Godot engine script loaded with fallback method 1');
+					};
+					fallback1.onerror = function() {
+						console.error('Fallback 1 failed, trying fetch method...');
+						// Fallback 2: fetch and eval
+						fetch('index.js')
+							.then(response => response.text())
+							.then(code => {
+								try {
+									eval(code);
+									console.log('Godot engine script loaded with fetch method');
+								} catch (e) {
+									console.error('Fetch method failed:', e);
+								}
+							})
+							.catch(err => {
+								console.error('All loading methods failed for Godot engine script:', err);
+							});
+					};
+					document.head.appendChild(fallback1);
+				};
+				
+				document.head.appendChild(script);
+			}
+			
+			// Wait for DOM to be ready
+			if (document.readyState === 'loading') {
+				console.log('DOM still loading, waiting...');
+				document.addEventListener('DOMContentLoaded', loadGodotScript);
+			} else {
+				console.log('DOM already ready, loading script...');
+				loadGodotScript();
+			}
+		</script>
+       
+		<script>
+// Godot configuration
+const GODOT_CONFIG = {
+	"args": [],
+	"canvasResizePolicy": 2,
+	"ensureCrossOriginIsolationHeaders": true,
+	"executable": "index",
+	"experimentalVK": false,
+	"fileSizes": {
+		"index.pck": 6580848,
+		"index.wasm": 52126319
+	},
+	"focusCanvas": true,
+	"gdextensionLibs": []
+};
+
+const GODOT_THREADS_ENABLED = false;
+const engine = new Engine(GODOT_CONFIG);
+
+// User data storage
+let userData = {
+	username: "",
+	walletAddress: ""
+};
+
+// Initialize the game
+(function () {
+	const statusOverlay = document.getElementById('status');
+	const statusProgress = document.getElementById('status-progress');
+	const statusNotice = document.getElementById('status-notice');
+	const loadingOverlay = document.getElementById('loading-overlay');
+
+	let initializing = true;
+	let statusMode = '';
+
+	function setStatusMode(mode) {
+		if (statusMode === mode || !initializing) {
+			return;
+		}
+		if (mode === 'hidden') {
+			statusOverlay.remove();
+			loadingOverlay.classList.add('hidden');
+			initializing = false;
+			return;
+		}
+		statusOverlay.style.visibility = 'visible';
+		statusProgress.style.display = mode === 'progress' ? 'block' : 'none';
+		statusNotice.style.display = mode === 'notice' ? 'block' : 'none';
+		statusMode = mode;
+	}
+
+	function setStatusNotice(text) {
+		while (statusNotice.lastChild) {
+			statusNotice.removeChild(statusNotice.lastChild);
+		}
+		const lines = text.split('\n');
+		lines.forEach((line) => {
+			statusNotice.appendChild(document.createTextNode(line));
+			statusNotice.appendChild(document.createElement('br'));
+		});
+	}
+
+	function displayFailureNotice(err) {
+		console.error(err);
+		if (err instanceof Error) {
+			setStatusNotice(err.message);
+		} else if (typeof err === 'string') {
+			setStatusNotice(err);
+		} else {
+			setStatusNotice('An unknown error occurred.');
+		}
+		setStatusMode('notice');
+		initializing = false;
+	}
+
+	// Check for missing features
+	const missing = Engine.getMissingFeatures({
+		threads: GODOT_THREADS_ENABLED,
+	});
+
+	if (missing.length !== 0) {
+		if (GODOT_CONFIG['serviceWorker'] && GODOT_CONFIG['ensureCrossOriginIsolationHeaders'] && 'serviceWorker' in navigator) {
+			let serviceWorkerRegistrationPromise;
+			try {
+				serviceWorkerRegistrationPromise = navigator.serviceWorker.getRegistration();
+			} catch (err) {
+				serviceWorkerRegistrationPromise = Promise.reject(new Error('Service worker registration failed.'));
+			}
+			
+			Promise.race([
+				serviceWorkerRegistrationPromise.then((registration) => {
+					if (registration != null) {
+						return Promise.reject(new Error('Service worker already exists.'));
+					}
+					return registration;
+				}).then(() => engine.installServiceWorker()),
+				new Promise((resolve) => {
+					setTimeout(() => resolve(), 2000);
+				}),
+			]).then(() => {
+				window.location.reload();
+			}).catch((err) => {
+				console.error('Error while registering service worker:', err);
+			});
+		} else {
+			const missingMsg = 'Error\nThe following features required to run Godot projects on the Web are missing:\n';
+			displayFailureNotice(missingMsg + missing.join('\n'));
+		}
+	} else {
+		setStatusMode('progress');
+		engine.startGame({
+			'onProgress': function (current, total) {
+				if (current > 0 && total > 0) {
+					statusProgress.value = current;
+					statusProgress.max = total;
+				} else {
+					statusProgress.removeAttribute('value');
+					statusProgress.removeAttribute('max');
+				}
+			},
+		}).then(() => {
+			setStatusMode('hidden');
+		}, displayFailureNotice);
+	}
+}());
+
+// Listen for messages from React app
+window.addEventListener('message', function(event) {
+	if (event.data.type === 'user_data') {
+		console.log('Received user data from React:', event.data);
+		
+		// Store user data
+		userData.username = event.data.username || "";
+		userData.walletAddress = event.data.walletAddress || "";
+		
+		// Update UI
+		updateUserInfoDisplay();
+		
+		// Store globally for Godot access
+		window.godotUsername = userData.username;
+		window.godotWalletAddress = userData.walletAddress;
+		
+		console.log('User data stored for Godot:', {
+			username: window.godotUsername,
+			wallet: window.godotWalletAddress
+		});
+	}
+});
+
+// Update user info display
+function updateUserInfoDisplay() {
+	const userInfo = document.getElementById('user-info');
+	const usernameDisplay = document.getElementById('username-display');
+	const walletDisplay = document.getElementById('wallet-display');
+	
+	if (userData.username && userData.walletAddress) {
+		usernameDisplay.textContent = `Player: ${userData.username}`;
+		walletDisplay.textContent = `Wallet: ${userData.walletAddress.substr(0, 6)}...${userData.walletAddress.substr(-4)}`;
+		userInfo.classList.add('show');
+	} else {
+		userInfo.classList.remove('show');
+	}
+}
+
+// Utility functions for Godot access
+window.getGodotUserData = function() {
+	return {
+		username: window.godotUsername || "",
+		walletAddress: window.godotWalletAddress || ""
+	};
+};
+
+window.hasGodotUserData = function() {
+	return !!(window.godotUsername && window.godotWalletAddress);
+};
+
+// Initialize user info display
+document.addEventListener('DOMContentLoaded', function() {
+	updateUserInfoDisplay();
+});
+		</script>
+
+		<!-- Ethers.js for blockchain functionality -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+        
+		<script>
+// Blockchain integration functions
+const MONAD_CHAIN_ID = "0x279F";
+
+function getMetaMaskProvider() {
+	if (window.ethereum?.providers) {
+		return window.ethereum.providers.find(p => p.isMetaMask);
+	} else if (window.ethereum?.isMetaMask) {
+		return window.ethereum;
+	}
+	return null;
+}
+
+async function connectWalletAndSendToGodot() {
+	const provider = getMetaMaskProvider();
+
+	if (provider) {
+		try {
+			await switchToMonadTestnet();
+			const accounts = await provider.request({ method: 'eth_requestAccounts' });
+			const wallet = accounts[0];
+			console.log('Connected wallet:', wallet);
+			
+			// Send wallet info to Godot
+			window.postMessage({
+				type: "godot_message", 
+				data: "Wallet connected: " + wallet
+			}, "*");
+
+		} catch (err) {
+			console.error('MetaMask error:', err);
+			window.postMessage({ wallet: 'error' }, "*");
+		}
+	} else {
+		window.postMessage({ wallet: 'MetaMask not found' }, "*");
+	}
+}
+
+async function switchToMonadTestnet() {
+	try {
+		await window.ethereum.request({
+			method: 'wallet_switchEthereumChain',
+			params: [{ chainId: MONAD_CHAIN_ID }],
+		});
+	} catch (switchError) {
+		if (switchError.code === 4902) {
+			try {
+				await window.ethereum.request({
+					method: 'wallet_addEthereumChain',
+					params: [{
+						chainId: MONAD_CHAIN_ID,
+						chainName: 'Monad Testnet',
+						rpcUrls: ['https://testnet-rpc.monad.xyz/'],
+						blockExplorerUrls: ['https://testnet.monadexplorer.com/'],
+						nativeCurrency: {
+							name: 'Monad',
+							symbol: 'MON',
+							decimals: 18
+						}
+					}]
+				});
+			} catch (addError) {
+				console.error("Error adding Monad testnet:", addError);
+			}
+		} else {
+			console.error("Error switching to Monad testnet:", switchError);
+		}
+	}
+}
+
+async function sendServer(url, data) {
+	try {
+		const response = await fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data)
+		});
+
+		if (!response.ok) {
+			throw new Error('Network response was not ok');
+		}
+		const json = await response.json();
+		return json;
+	} catch (error) {
+		return { error: error.message };
+	}
+}
+
+// Make functions globally available
+window.connectWalletAndSendToGodot = connectWalletAndSendToGodot;
+window.sendServer = sendServer;
+		</script>
+	</body>
+</html>
+
+
+
