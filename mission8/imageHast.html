@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Move-In Proof</title>
+</head>
+<body>
+    <input type="file" id="fileInput" />
+<button id="verifyBtn">Verify & Submit</button>
+</body>
+<script type="module">
+import { ethers } from "https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.esm.min.js";
+
+async function fileToKeccak256(file) {
+  const arrayBuffer = await file.arrayBuffer();
+  // ethers expects hex data; use keccak256 on bytes
+  const hash = ethers.utils.keccak256(new Uint8Array(arrayBuffer));
+  return hash; // 0x...
+}
+
+document.getElementById('verifyBtn').addEventListener('click', async () => {
+  const file = document.getElementById('fileInput').files[0];
+  if(!file) return alert("Select file");
+  const imageHash = await fileToKeccak256(file);
+  console.log("ImageHash:", imageHash);
+
+  
+});
+</script>
+</html>

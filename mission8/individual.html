@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Move-In Proof</title>
+    <link rel="stylesheet" href="./index.css?v=2.0">
+    <link href="https://cdn.jsdelivr.net/npm/fastbootstrap@2.2.0/dist/css/fastbootstrap.min.css" rel="stylesheet" integrity="sha256-V6lu+OdYNKTKTsVFBuQsyIlDiRWiOmtC8VQ8Lzdm2i4=" crossorigin="anonymous">
+</head>
+<body class="bg-gray">
+     <div class="container mt-5 text-white ">
+        <div class="row">
+            <div class="col-12  ">
+                <h1 class="text-ubuntu-regular  ">Individual Rent Deposit Timestamp Form</h1>
+            </div>
+            <div class="col-12  ">
+                <button class="btn btn-primary mt-3" onclick="window.history.back();">Back</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 ">
+                <!--wallet connection-->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12  border border-dashed border-1 border-primary rounded p-3 mt-3 bg-dark bg-opacity-50">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="text-ubuntu-regular text-primary">House Information</h3>
+                    <span class="input-group-text" data-bs-toggle="tooltip" data-bs-placement="top" title="Click to lock/unlock all House Information inputs" style="cursor: pointer;" onclick="toggleAllInputsLock('houseInformation')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-unlock" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M12 0a4 4 0 0 1 4 4v2.5h-1V4a3 3 0 1 0-6 0v2h.5A2.5 2.5 0 0 1 12 8.5v5A2.5 2.5 0 0 1 9.5 16h-7A2.5 2.5 0 0 1 0 13.5v-5A2.5 2.5 0 0 1 2.5 6H8V4a4 4 0 0 1 4-4M2.5 7A1.5 1.5 0 0 0 1 8.5v5A1.5 1.5 0 0 0 2.5 15h7a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 9.5 7z"/>
+                        </svg>
+                    </span>
+                </div>
+                <div class="container ">
+                    <div class="row my-1">
+                        <div class="col-12 col-md-4">
+                            <h5  class="text-ubuntu-regular"> ADDRESS : </h5>  
+                        </div>
+                        <div class="col-12 col-md-8">
+                            <input type="text" class="form-control" id="addressInput" />
+                        </div>
+                    </div>
+                    <div class="row my-1">
+                        <div class="col-12 col-md-4">
+                            <h5  class="text-ubuntu-regular"> MOVE-IN DATE : </h5>  
+                        </div>
+                        <div class="col-12 col-md-8">
+                            <input type="date" class="form-control" id="moveInDateInput" style="max-width: 250px;" />
+                        </div>
+                    </div>
+                    <div class="row my-1">
+                        <div class="col-12 col-md-4">
+                            <h5  class="text-ubuntu-regular"> DEPOSIT AMOUNT : </h5>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <input type="text" class="form-control" id="depositAmountInput" style="max-width: 250px;" />
+                        </div>
+                        <div class="col-12 col-md-4 text-md-end text-start mt-2 mt-md-0">
+                            <h6>Don't forget to add currency </h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-12 border  border-dashed border-1 border-discovery-subtle rounded p-3 mt-3 bg-dark bg-opacity-50">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="text-ubuntu-regular text-discovery">House Owner</h2>
+                    <span class="input-group-text" data-bs-toggle="tooltip" data-bs-placement="top" title="Click to lock/unlock all House Owner inputs" style="cursor: pointer;" onclick="toggleAllInputsLock('houseOwner')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-unlock" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M12 0a4 4 0 0 1 4 4v2.5h-1V4a3 3 0 1 0-6 0v2h.5A2.5 2.5 0 0 1 12 8.5v5A2.5 2.5 0 0 1 9.5 16h-7A2.5 2.5 0 0 1 0 13.5v-5A2.5 2.5 0 0 1 2.5 6H8V4a4 4 0 0 1 4-4M2.5 7A1.5 1.5 0 0 0 1 8.5v5A1.5 1.5 0 0 0 2.5 15h7a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 9.5 7z"/>
+                        </svg>
+                    </span>
+                </div>
+                <hr class="text-primary" />
+                <div class="container ">
+                    <div class="row my-1">
+                        <div class="col-4">
+                            <h5  class="text-ubuntu-regular"> NAME : </h5>   
+                        </div>
+                        <div class="col-8">
+                            
+                            <input type="text" class="form-control" id="houseOwnerName" />
+                        </div>
+                    </div>
+                    <div class="row my-1">
+                        <div class="col-4">
+                            <h5  class="text-ubuntu-regular"> SURNAME : </h5>   
+                        </div>
+                        <div class="col-8">
+                            
+                            <input type="text" class="form-control" id="houseOwnerSurname" />
+                        </div>
+                    </div>
+                    <div class="row my-1">
+                        <div class="col-4">
+                            <h5  class="text-ubuntu-regular"> DATE OF BIRTH : </h5>   
+                        </div>
+                        <div class="col-8">
+                            
+                            <input type="date" class="form-control" id="houseOwnerDateOfBirth" />
+                        </div>
+                    </div>
+                    <div class="row my-1">
+                        <div class="col-4">
+                            <h5  class="text-ubuntu-regular"> ID/TAX CODE : </h5>   
+                        </div>
+                        <div class="col-8">
+                            
+                            <input type="text" class="form-control" id="houseOwnerIdTaxCode" />
+                        </div>
+                    </div>
+                    <div class="row my-1">
+                        <div class="col-4">
+                            <h5  class="text-ubuntu-regular"> EMAIL : </h5>   
+                        </div>
+                        <div class="col-8">
+                            
+                            <input type="email" class="form-control" id="houseOwnerEmail" />
+                        </div>
+                    </div>
+                    <div class="row my-1">
+                        <div class="col-4">
+                            <h5  class="text-ubuntu-regular"> MOBILE : </h5>   
+                        </div>
+                        <div class="col-8">
+                            
+                            <input type="number" class="form-control" id="houseOwnerMobile" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12 border border-dashed border-1 border-success-subtle rounded p-3 mt-3 bg-dark bg-opacity-50">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="text-ubuntu-regular text-success">Tenant</h2>
+                    <span class="input-group-text" data-bs-toggle="tooltip" data-bs-placement="top" title="Click to lock/unlock all Tenant inputs" style="cursor: pointer;" onclick="toggleAllInputsLock('tenant')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-unlock" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M12 0a4 4 0 0 1 4 4v2.5h-1V4a3 3 0 1 0-6 0v2h.5A2.5 2.5 0 0 1 12 8.5v5A2.5 2.5 0 0 1 9.5 16h-7A2.5 2.5 0 0 1 0 13.5v-5A2.5 2.5 0 0 1 2.5 6H8V4a4 4 0 0 1 4-4M2.5 7A1.5 1.5 0 0 0 1 8.5v5A1.5 1.5 0 0 0 2.5 15h7a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 9.5 7z"/>
+                        </svg>
+                    </span>
+                </div>
+                <hr class="text-primary" />
+                <div class="container ">
+                    <div class="row my-1">
+                        <div class="col-4">
+                            <h5  class="text-ubuntu-regular"> NAME : </h5>   
+                        </div>
+                        <div class="col-8">
+                            
+                            <input type="text" class="form-control" id="tenantName" />
+                        </div>
+                    </div>
+                    <div class="row my-1">
+                        <div class="col-4">
+                            <h5  class="text-ubuntu-regular"> SURNAME : </h5>   
+                        </div>
+                        <div class="col-8">
+                            
+                            <input type="text" class="form-control" id="tenantSurname" />
+                        </div>
+                    </div>
+                    <div class="row my-1">
+                        <div class="col-4">
+                            <h5  class="text-ubuntu-regular"> DATE OF BIRTH : </h5>   
+                        </div>
+                        <div class="col-8">
+                            
+                            <input type="date" class="form-control" id="tenantDateOfBirth" />
+                        </div>
+                    </div>
+                    <div class="row my-1">
+                        <div class="col-4">
+                            <h5  class="text-ubuntu-regular"> ID/TAX CODE : </h5>   
+                        </div>
+                        <div class="col-8">
+                            
+                            <input type="text" class="form-control" id="tenantIdTaxCode" />
+                        </div>
+                    </div>
+                    <div class="row my-1">
+                        <div class="col-4">
+                            <h5  class="text-ubuntu-regular"> EMAIL : </h5>   
+                        </div>
+                        <div class="col-8">
+                            
+                            <input type="email" class="form-control" id="tenantEmail" />
+                        </div>
+                    </div>
+                    <div class="row my-1">
+                        <div class="col-4">
+                            <h5  class="text-ubuntu-regular"> MOBILE : </h5>   
+                        </div>
+                        <div class="col-8">
+                            
+                            <input type="number" class="form-control" id="tenantMobile" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12  border border-1  rounded p-3 mt-3 bg-dark ">
+                <h3 class="text-ubuntu-regular">Contrat Images </h3>
+                
+                <form id="imageUploadForm" enctype="multipart/form-data">
+                    <input type="file" id="contractImages" name="contractImages[]" multiple accept=".jpg,.jpeg,.png" style="display: none;">
+                    
+                    <div id="imagePreview" class="row mt-3">
+                        <!-- Image previews will be displayed here -->
+                    </div>
+                    
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-primary" onclick="addMoreImages()">Add More Images</button>
+                        <button type="button" class="btn btn-secondary" onclick="clearAllImages()">Clear All</button>
+                        <small class="text-muted ms-3">Only JPG and PNG formats are accepted</small>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12  border border-1  rounded p-3 mt-3 bg-dark ">
+                <h3 class="text-ubuntu-regular">House Plan</h3>
+                
+                <form id="flatPlanForm" enctype="multipart/form-data">
+                    <input type="file" id="flatPlanImages" name="flatPlanImages[]" multiple accept=".jpg,.jpeg,.png" style="display: none;">
+                    
+                    <div id="flatPlanPreview" class="row mt-3">
+                        <!-- Image previews will be displayed here -->
+                    </div>
+                    
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-primary" onclick="addMoreFlatPlanImages()">Add More Images</button>
+                        <button type="button" class="btn btn-secondary" onclick="clearAllFlatPlanImages()">Clear All</button>
+                        <small class="text-muted ms-3">Only JPG and PNG formats are accepted</small>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12  border border-1  rounded p-3 mt-3 bg-dark ">
+                <h2 class="text-ubuntu-regular">Image List</h2>
+                
+                <form id="imageListForm" enctype="multipart/form-data">
+                    <input type="file" id="imageListImages" name="imageListImages[]" multiple accept=".jpg,.jpeg,.png" style="display: none;">
+                    
+                    <div id="imageListPreview" class="row mt-3">
+                        <!-- Image previews will be displayed here -->
+                    </div>
+                    
+                    <div class="mt-3">
+                        <button type="button" class="btn btn-primary" onclick="addMoreImageListImages()">Add More Images</button>
+                        <button type="button" class="btn btn-secondary" onclick="clearAllImageListImages()">Clear All</button>
+                        <small class="text-muted ms-3">Only JPG and PNG formats are accepted</small>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12  border border-1  rounded p-3 mt-3 bg-dark ">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="text-ubuntu-regular">Notes</h3>
+                    <span class="input-group-text" data-bs-toggle="tooltip" data-bs-placement="top" title="Click to lock/unlock Notes input" style="cursor: pointer;" onclick="toggleInputLock('notes', this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-unlock" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M12 0a4 4 0 0 1 4 4v2.5h-1V4a3 3 0 1 0-6 0v2h.5A2.5 2.5 0 0 1 12 8.5v5A2.5 2.5 0 0 1 9.5 16h-7A2.5 2.5 0 0 1 0 13.5v-5A2.5 2.5 0 0 1 2.5 6H8V4a4 4 0 0 1 4-4M2.5 7A1.5 1.5 0 0 0 1 8.5v5A1.5 1.5 0 0 0 2.5 15h7a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 9.5 7z"/>
+                        </svg>
+                    </span>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="notes" class="form-label text-ubuntu-regular">Additional Notes</label>
+                    <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Enter any additional notes or comments here..."></textarea>
+                </div>
+                
+                
+            </div>
+        </div>
+        <div class="row">
+            <div class= "col-12 my-5">
+                <button type="button" class="btn btn-danger" onclick="signDocument()" style="
+                        --bs-btn-padding-y: 0.75rem; 
+                        --bs-btn-padding-x: 1.25rem; 
+                        --bs-btn-font-size: 1rem;">
+                Sign Document
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Warning Modal -->
+    <div class="modal fade" id="warningModal" tabindex="-1" aria-labelledby="warningModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title text-warning" id="warningModalLabel">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-exclamation-triangle me-2" viewBox="0 0 16 16">
+                            <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/>
+                            <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995z"/>
+                        </svg>
+                        Warning: Unlocked Inputs
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Please lock all inputs before signing the document. The following sections have unlocked inputs:</p>
+                    <ul id="unlockedSections" class="list-unstyled">
+                        <!-- Unlocked sections will be listed here -->
+                    </ul>
+                    <p class="text-muted mt-3">Click on the lock icons next to each section title to lock all inputs in that section.</p>
+                </div>
+                <div class="modal-footer border-secondary">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@metamask/delegation-toolkit@0.13.0/dist/index.umd.js"></script>
+    <script>
+        let selectedImages = [];
+        let selectedFlatPlanImages = [];
+        let selectedImageListImages = [];
+        let lockedInputHashes = {}; // Store hashes for locked inputs
+        
+        // Blockchain configuration
+        const CONTRACT_ADDRESS = '0xEc904598C5a80372416813C97D85Dc5F5C4603eA';
+        const MONAD_CHAIN_ID = '0x1a4'; // Monad Testnet Chain ID
+        const MONAD_RPC_URL = 'https://testnet-rpc.monad.xyz';
+        
+        // Smart Account variables
+        let smartAccount = null;
+        
+        const CONTRACT_ABI = [
+            {
+                "inputs": [
+                    {
+                        "components": [
+                            { "internalType": "string[]", "name": "contractImages", "type": "string[]" },
+                            { "internalType": "string[]", "name": "flatPlans", "type": "string[]" },
+                            { "internalType": "string[]", "name": "imageList", "type": "string[]" },
+                            { "internalType": "bytes32", "name": "addressInputHash", "type": "bytes32" },
+                            { "internalType": "bytes32", "name": "depositAmountInputHash", "type": "bytes32" },
+                            { "internalType": "bytes32", "name": "houseOwnerDateOfBirthHash", "type": "bytes32" },
+                            { "internalType": "bytes32", "name": "houseOwnerEmailHash", "type": "bytes32" },
+                            { "internalType": "bytes32", "name": "houseOwnerIdTaxCodeHash", "type": "bytes32" },
+                            { "internalType": "string", "name": "houseOwnerName", "type": "string" },
+                            { "internalType": "string", "name": "houseOwnerSurname", "type": "string" },
+                            { "internalType": "string", "name": "moveInDateInput", "type": "string" },
+                            { "internalType": "string", "name": "notes", "type": "string" },
+                            { "internalType": "bytes32", "name": "tenantDateOfBirthHash", "type": "bytes32" },
+                            { "internalType": "bytes32", "name": "tenantEmailHash", "type": "bytes32" },
+                            { "internalType": "bytes32", "name": "tenantIdTaxCodeHash", "type": "bytes32" },
+                            { "internalType": "string", "name": "tenantName", "type": "string" },
+                            { "internalType": "string", "name": "tenantSurname", "type": "string" }
+                        ],
+                        "internalType": "struct RentalAgreementRegistry.RentalInput",
+                        "name": "input",
+                        "type": "tuple"
+                    }
+                ],
+                "name": "create",
+                "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    { "indexed": true, "internalType": "uint256", "name": "id", "type": "uint256" },
+                    { "indexed": false, "internalType": "uint256", "name": "createdAt", "type": "uint256" },
+                    { "indexed": true, "internalType": "address", "name": "creator", "type": "address" }
+                ],
+                "name": "ContractCreated",
+                "type": "event"
+            }
+        ];
+        
+        // Function to create hash from file using Web Crypto API (SHA-256)
+        async function fileToSha256(file) {
+            const arrayBuffer = await file.arrayBuffer();
+            const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return '0x' + hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Function to create hash from text using Web Crypto API (SHA-256)
+        async function textToSha256(text) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return '0x' + hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Function to generate and store hash for locked input
+        async function generateHashForInput(inputId) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+
+            const value = input.value.trim();
+            if (value === '') {
+                // Remove hash if input is empty
+                delete lockedInputHashes[inputId];
+                return;
+            }
+
+            try {
+                const hash = await textToSha256(value);
+                lockedInputHashes[inputId] = {
+                    value: value,
+                    hash: hash,
+                    timestamp: new Date().toISOString()
+                };
+                console.log(`Hash generated for ${inputId}:`, lockedInputHashes[inputId]);
+            } catch (error) {
+                console.error(`Error generating hash for ${inputId}:`, error);
+            }
+        }
+
+        // Function to update image hashes in lockedInputHashes
+        function updateImageHashes() {
+            // Contract Images
+            if (selectedImages.length > 0) {
+                lockedInputHashes['Contrat Images'] = {
+                    section: 'Contrat Images',
+                    images: selectedImages.map(file => ({
+                        name: file.name,
+                        hash: file.hash,
+                        timestamp: new Date().toISOString()
+                    })),
+                    count: selectedImages.length,
+                    timestamp: new Date().toISOString()
+                };
+            } else {
+                delete lockedInputHashes['Contrat Images'];
+            }
+
+            // Flat Plan Images
+            if (selectedFlatPlanImages.length > 0) {
+                lockedInputHashes['Flat Plan'] = {
+                    section: 'Flat Plan',
+                    images: selectedFlatPlanImages.map(file => ({
+                        name: file.name,
+                        hash: file.hash,
+                        timestamp: new Date().toISOString()
+                    })),
+                    count: selectedFlatPlanImages.length,
+                    timestamp: new Date().toISOString()
+                };
+            } else {
+                delete lockedInputHashes['Flat Plan'];
+            }
+
+            // Image List Images
+            if (selectedImageListImages.length > 0) {
+                lockedInputHashes['Image List'] = {
+                    section: 'Image List',
+                    images: selectedImageListImages.map(file => ({
+                        name: file.name,
+                        hash: file.hash,
+                        timestamp: new Date().toISOString()
+                    })),
+                    count: selectedImageListImages.length,
+                    timestamp: new Date().toISOString()
+                };
+            } else {
+                delete lockedInputHashes['Image List'];
+            }
+
+            console.log('Image hashes updated:', lockedInputHashes);
+        }
+
+        // Function to update hashes for multiple inputs
+        async function updateHashesForInputs(inputIds) {
+            for (const inputId of inputIds) {
+                const input = document.getElementById(inputId);
+                if (input && input.readOnly) {
+                    await generateHashForInput(inputId);
+                }
+            }
+        }
+
+        // Function to convert hex string to bytes32
+        function hexToBytes32(hexString) {
+            // Remove 0x prefix if present
+            const cleanHex = hexString.startsWith('0x') ? hexString.slice(2) : hexString;
+            // Pad to 64 characters (32 bytes)
+            const paddedHex = cleanHex.padStart(64, '0');
+            return '0x' + paddedHex;
+        }
+
+
+        // Function to connect wallet
+        async function connectWallet() {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    // Request account access
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    const userAddress = accounts[0];
+                    
+                    console.log('Connected wallet:', userAddress);
+                    
+                    return userAddress;
+                    
+                } catch (error) {
+                    console.error('Error connecting wallet:', error);
+                    throw new Error('Failed to connect wallet: ' + error.message);
+                }
+            } else {
+                throw new Error('MetaMask not installed');
+            }
+        }
+
+        // Function to create contract instance (legacy ethers)
+        function getContractInstance() {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
+            return new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+        }
+
+        // Function to send transaction using ethers.js
+        async function sendTransaction(contractData) {
+            const contract = getContractInstance();
+            
+            // Send transaction
+            const tx = await contract.create(contractData);
+            console.log('Transaction sent:', tx);
+            
+            // Wait for transaction to be mined
+            const receipt = await tx.wait();
+            console.log('Transaction receipt:', receipt);
+
+            return {
+                transactionHash: tx.hash,
+                receipt: receipt
+            };
+        }
+
+        // Function to prepare contract data
+        function prepareContractData() {
+            // Get image arrays
+            const contractImages = selectedImages.map(file => file.name);
+            const flatPlans = selectedFlatPlanImages.map(file => file.name);
+            const imageList = selectedImageListImages.map(file => file.name);
+
+            // Get hash values or empty bytes32
+            const getHashValue = (inputId) => {
+                const hashData = lockedInputHashes[inputId];
+                return hashData ? hexToBytes32(hashData.hash) : '0x0000000000000000000000000000000000000000000000000000000000000000';
+            };
+
+            // Prepare the contract input
+            const contractInput = {
+                contractImages: contractImages,
+                flatPlans: flatPlans,
+                imageList: imageList,
+                addressInputHash: getHashValue('addressInput'),
+                depositAmountInputHash: getHashValue('depositAmountInput'),
+                houseOwnerDateOfBirthHash: getHashValue('houseOwnerDateOfBirth'),
+                houseOwnerEmailHash: getHashValue('houseOwnerEmail'),
+                houseOwnerIdTaxCodeHash: getHashValue('houseOwnerIdTaxCode'),
+                houseOwnerName: document.getElementById('houseOwnerName').value || '',
+                houseOwnerSurname: document.getElementById('houseOwnerSurname').value || '',
+                moveInDateInput: document.getElementById('moveInDateInput').value || '',
+                notes: document.getElementById('notes').value || '',
+                tenantDateOfBirthHash: getHashValue('tenantDateOfBirth'),
+                tenantEmailHash: getHashValue('tenantEmail'),
+                tenantIdTaxCodeHash: getHashValue('tenantIdTaxCode'),
+                tenantName: document.getElementById('tenantName').value || '',
+                tenantSurname: document.getElementById('tenantSurname').value || ''
+            };
+
+            return contractInput;
+        }
+
+        // Function to display contract result
+        function displayContractResult(contractId, timestamp, transactionHash) {
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'alert alert-success mt-3';
+            resultDiv.innerHTML = `
+                <h5><i class="bi bi-check-circle me-2"></i>Contract Successfully Created!</h5>
+                <p><strong>Contract ID:</strong> ${contractId}</p>
+                <p><strong>Created At:</strong> ${new Date(timestamp * 1000).toLocaleString()}</p>
+                <p><strong>Transaction Hash:</strong> ${transactionHash}</p>
+                <p><strong>View Transaction:</strong> 
+                    <a href="https://monad-testnet.socialscan.io/tx/${transactionHash}" target="_blank" class="text-decoration-none me-3">View on SocialScan</a>
+                    <a href="https://testnet.monadexplorer.com/tx/${transactionHash}" target="_blank" class="text-decoration-none">View on MonadExplorer</a>
+                </p>
+                <div class="mt-3">
+                    <button type="button" class="btn btn-outline-primary" onclick="downloadContractData()">
+                        <i class="bi bi-download me-2"></i>Download Contract Data (JSON)
+                    </button>
+                </div>
+            `;
+            
+            // Insert after the sign button
+            const signButton = document.querySelector('button[onclick="signDocument()"]');
+            signButton.parentNode.insertBefore(resultDiv, signButton.nextSibling);
+            
+            // Disable the sign button permanently
+            disableSignButton();
+        }
+
+        // Function to disable sign button permanently
+        function disableSignButton() {
+            const signButton = document.querySelector('button[onclick="signDocument()"]');
+            signButton.disabled = true;
+            signButton.innerHTML = '<i class="bi bi-check-circle me-2"></i>Document Signed Successfully';
+            signButton.classList.remove('btn-danger');
+            signButton.classList.add('btn-success');
+            signButton.style.cursor = 'not-allowed';
+            signButton.setAttribute('onclick', ''); // Remove onclick handler
+        }
+
+        // Function to download contract data as JSON
+        window.downloadContractData = function() {
+            // Prepare contract data (excluding images)
+            const contractData = {
+                contractInfo: {
+                    contractId: document.querySelector('.alert-success p strong').nextSibling.textContent.trim(),
+                    createdAt: document.querySelectorAll('.alert-success p strong')[1].nextSibling.textContent.trim(),
+                    transactionHash: document.querySelectorAll('.alert-success p strong')[2].nextSibling.textContent.trim()
+                },
+                houseInfo: {
+                    address: document.getElementById('addressInput').value,
+                    moveInDate: document.getElementById('moveInDateInput').value,
+                    depositAmount: document.getElementById('depositAmountInput').value
+                },
+                houseOwner: {
+                    name: document.getElementById('houseOwnerName').value,
+                    surname: document.getElementById('houseOwnerSurname').value,
+                    dateOfBirth: document.getElementById('houseOwnerDateOfBirth').value,
+                    idTaxCode: document.getElementById('houseOwnerIdTaxCode').value,
+                    email: document.getElementById('houseOwnerEmail').value,
+                    mobile: document.getElementById('houseOwnerMobile').value
+                },
+                tenant: {
+                    name: document.getElementById('tenantName').value,
+                    surname: document.getElementById('tenantSurname').value,
+                    dateOfBirth: document.getElementById('tenantDateOfBirth').value,
+                    idTaxCode: document.getElementById('tenantIdTaxCode').value,
+                    email: document.getElementById('tenantEmail').value,
+                    mobile: document.getElementById('tenantMobile').value
+                },
+                notes: document.getElementById('notes').value,
+                lockedInputHashes: lockedInputHashes,
+                imageInfo: {
+                    contractImagesCount: selectedImages.length,
+                    flatPlanImagesCount: selectedFlatPlanImages.length,
+                    imageListImagesCount: selectedImageListImages.length,
+                    note: "Image files are not included in JSON export. Only image counts and hashes are provided."
+                },
+                exportInfo: {
+                    exportedAt: new Date().toISOString(),
+                    exportedBy: "Rental Agreement System",
+                    version: "1.0"
+                }
+            };
+
+            // Create and download JSON file
+            const jsonString = JSON.stringify(contractData, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            // Create download link
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.download = `rental_agreement_${new Date().toISOString().split('T')[0]}.json`;
+            
+            // Trigger download
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            
+            // Clean up
+            URL.revokeObjectURL(url);
+            
+            console.log('Contract data downloaded as JSON:', contractData);
+        }
+
+        // Function to update tooltip with hash
+        async function updateTooltipWithHash(inputId, tooltipElement) {
+            const input = document.getElementById(inputId);
+            const text = input.value;
+            
+            if (text.trim() === '') {
+                tooltipElement.setAttribute('data-bs-original-title', 'Enter text to generate hash');
+                return;
+            }
+            
+            try {
+                const hash = await textToSha256(text);
+                tooltipElement.setAttribute('data-bs-original-title', `SHA-256 Hash: ${hash}`);
+            } catch (error) {
+                tooltipElement.setAttribute('data-bs-original-title', 'Error generating hash');
+            }
+        }
+
+        // Function to toggle input lock state
+        window.toggleInputLock = function(inputId, iconElement) {
+            const input = document.getElementById(inputId);
+            const svg = iconElement.querySelector('svg');
+            const path = svg.querySelector('path');
+            
+            if (input.readOnly) {
+                // Unlock input
+                input.readOnly = false;
+                input.classList.remove('bg-secondary');
+                input.style.backgroundColor = '';
+                
+                // Remove hash when unlocking
+                delete lockedInputHashes[inputId];
+                
+                // Change to unlock icon
+                path.setAttribute('d', 'M12 0a4 4 0 0 1 4 4v2.5h-1V4a3 3 0 1 0-6 0v2h.5A2.5 2.5 0 0 1 12 8.5v5A2.5 2.5 0 0 1 9.5 16h-7A2.5 2.5 0 0 1 0 13.5v-5A2.5 2.5 0 0 1 2.5 6H8V4a4 4 0 0 1 4-4M2.5 7A1.5 1.5 0 0 0 1 8.5v5A1.5 1.5 0 0 0 2.5 15h7a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 9.5 7z');
+                iconElement.setAttribute('data-bs-original-title', 'Click to lock input');
+            } else {
+                // Lock input
+                input.readOnly = true;
+                input.classList.add('bg-secondary');
+                input.style.backgroundColor = '#6c757d';
+                
+                // Generate hash for locked input
+                generateHashForInput(inputId);
+                
+                // Change to lock icon
+                path.setAttribute('d', 'M8 0a4 4 0 0 1 4 4v2.05a2.5 2.5 0 0 1 2 2.45v5a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 2 13.5v-5a2.5 2.5 0 0 1 2-2.45V4a4 4 0 0 1 4-4M4.5 7A1.5 1.5 0 0 0 3 8.5v5A1.5 1.5 0 0 0 4.5 15h7a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 11.5 7zM8 1a3 3 0 0 0-3 3v2h6V4a3 3 0 0 0-3-3');
+                iconElement.setAttribute('data-bs-original-title', 'Click to unlock input');
+            }
+            
+            // Refresh tooltip
+            const tooltip = bootstrap.Tooltip.getInstance(iconElement);
+            if (tooltip) {
+                tooltip.dispose();
+                new bootstrap.Tooltip(iconElement);
+            }
+        }
+
+        // Function to toggle all inputs in a section
+        window.toggleAllInputsLock = function(section) {
+            let inputIds = [];
+            
+            if (section === 'houseInformation') {
+                inputIds = ['addressInput', 'moveInDateInput', 'depositAmountInput'];
+            } else if (section === 'houseOwner') {
+                inputIds = ['houseOwnerName', 'houseOwnerSurname', 'houseOwnerDateOfBirth', 'houseOwnerIdTaxCode', 'houseOwnerEmail', 'houseOwnerMobile'];
+            } else if (section === 'tenant') {
+                inputIds = ['tenantName', 'tenantSurname', 'tenantDateOfBirth', 'tenantIdTaxCode', 'tenantEmail', 'tenantMobile'];
+            } else if (section === 'notes') {
+                inputIds = ['notes'];
+            }
+            
+            if (inputIds.length === 0) return;
+            
+            // Check if any input is locked
+            const anyLocked = inputIds.some(id => {
+                const input = document.getElementById(id);
+                return input && input.readOnly;
+            });
+            
+            // Toggle all inputs
+            inputIds.forEach(inputId => {
+                const input = document.getElementById(inputId);
+                if (input) {
+                    if (anyLocked) {
+                        // Unlock all
+                        input.readOnly = false;
+                        input.classList.remove('bg-secondary');
+                        input.style.backgroundColor = '';
+                        // Remove hash when unlocking
+                        delete lockedInputHashes[inputId];
+                    } else {
+                        // Lock all
+                        input.readOnly = true;
+                        input.classList.add('bg-secondary');
+                        input.style.backgroundColor = '#6c757d';
+                    }
+                }
+            });
+
+            // Generate hashes for newly locked inputs
+            if (!anyLocked) {
+                updateHashesForInputs(inputIds);
+            }
+            
+            // Update span icon and tooltip
+            const span = event.target.closest('span');
+            const svg = span.querySelector('svg');
+            const path = svg.querySelector('path');
+            
+            if (anyLocked) {
+                // Change to unlock icon
+                path.setAttribute('d', 'M12 0a4 4 0 0 1 4 4v2.5h-1V4a3 3 0 1 0-6 0v2h.5A2.5 2.5 0 0 1 12 8.5v5A2.5 2.5 0 0 1 9.5 16h-7A2.5 2.5 0 0 1 0 13.5v-5A2.5 2.5 0 0 1 2.5 6H8V4a4 4 0 0 1 4-4M2.5 7A1.5 1.5 0 0 0 1 8.5v5A1.5 1.5 0 0 0 2.5 15h7a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 9.5 7z');
+                span.setAttribute('data-bs-original-title', `Click to lock all ${section} inputs`);
+            } else {
+                // Change to lock icon
+                path.setAttribute('d', 'M8 0a4 4 0 0 1 4 4v2.05a2.5 2.5 0 0 1 2 2.45v5a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 2 13.5v-5a2.5 2.5 0 0 1 2-2.45V4a4 4 0 0 1 4-4M4.5 7A1.5 1.5 0 0 0 3 8.5v5A1.5 1.5 0 0 0 4.5 15h7a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 11.5 7zM8 1a3 3 0 0 0-3 3v2h6V4a3 3 0 0 0-3-3');
+                span.setAttribute('data-bs-original-title', `Click to unlock all ${section} inputs`);
+            }
+            
+            // Refresh tooltip
+            const tooltip = bootstrap.Tooltip.getInstance(span);
+            if (tooltip) {
+                tooltip.dispose();
+                new bootstrap.Tooltip(span);
+            }
+        }
+        
+        // Handle file selection for Contract Images
+        document.getElementById('contractImages').addEventListener('change', async function(e) {
+            const files = Array.from(e.target.files);
+            
+            // Create hash for each new file
+            for (let file of files) {
+                try {
+                    const hash = await fileToSha256(file);
+                    file.hash = hash;
+                } catch (error) {
+                    console.error('Error creating hash for file:', file.name, error);
+                    file.hash = 'Hash Error';
+                }
+            }
+            
+            selectedImages = [...selectedImages, ...files];
+            displayImagePreviews();
+            updateImageHashes();
+        });
+
+        // Handle file selection for Flat Plan Images
+        document.getElementById('flatPlanImages').addEventListener('change', async function(e) {
+            const files = Array.from(e.target.files);
+            
+            // Create hash for each new file
+            for (let file of files) {
+                try {
+                    const hash = await fileToSha256(file);
+                    file.hash = hash;
+                } catch (error) {
+                    console.error('Error creating hash for file:', file.name, error);
+                    file.hash = 'Hash Error';
+                }
+            }
+            
+            selectedFlatPlanImages = [...selectedFlatPlanImages, ...files];
+            displayFlatPlanPreviews();
+            updateImageHashes();
+        });
+
+        // Handle file selection for Image List Images
+        document.getElementById('imageListImages').addEventListener('change', async function(e) {
+            const files = Array.from(e.target.files);
+            
+            // Create hash for each new file
+            for (let file of files) {
+                try {
+                    const hash = await fileToSha256(file);
+                    file.hash = hash;
+                } catch (error) {
+                    console.error('Error creating hash for file:', file.name, error);
+                    file.hash = 'Hash Error';
+                }
+            }
+            
+            selectedImageListImages = [...selectedImageListImages, ...files];
+            displayImageListPreviews();
+            updateImageHashes();
+        });
+        
+        // Display image previews for Contract Images
+        function displayImagePreviews() {
+            const previewContainer = document.getElementById('imagePreview');
+            previewContainer.innerHTML = '';
+            
+            selectedImages.forEach((file, index) => {
+                const col = document.createElement('div');
+                col.className = 'col-md-3 col-sm-6 mb-3';
+                
+                const card = document.createElement('div');
+                card.className = 'card bg-dark border border-secondary';
+                
+                const img = document.createElement('img');
+                img.className = 'card-img-top';
+                img.style.height = '150px';
+                img.style.objectFit = 'cover';
+                img.src = URL.createObjectURL(file);
+                
+                const cardBody = document.createElement('div');
+                cardBody.className = 'card-body p-2';
+                
+                const fileName = document.createElement('small');
+                fileName.className = 'text-muted';
+                fileName.textContent = file.name.length > 20 ? file.name.substring(0, 20) + '...' : file.name;
+                
+                // Hash display
+                const hashDiv = document.createElement('div');
+                hashDiv.className = 'mt-2';
+                
+                const hashLabel = document.createElement('small');
+                hashLabel.className = 'text-info';
+                hashLabel.textContent = 'SHA-256 Hash: ';
+                
+                const hashValue = document.createElement('small');
+                hashValue.className = 'text-muted';
+                hashValue.style.fontSize = '10px';
+                hashValue.style.wordBreak = 'break-all';
+                hashValue.textContent = file.hash ? file.hash.substring(0, 20) + '...' : 'Generating...';
+                
+                hashDiv.appendChild(hashLabel);
+                hashDiv.appendChild(document.createElement('br'));
+                hashDiv.appendChild(hashValue);
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'btn btn-sm btn-danger mt-1';
+                removeBtn.innerHTML = 'Remove';
+                removeBtn.onclick = () => removeImage(index);
+                
+                cardBody.appendChild(fileName);
+                cardBody.appendChild(document.createElement('br'));
+                cardBody.appendChild(hashDiv);
+                cardBody.appendChild(removeBtn);
+                
+                card.appendChild(img);
+                card.appendChild(cardBody);
+                col.appendChild(card);
+                previewContainer.appendChild(col);
+            });
+        }
+
+        // Display image previews for Flat Plan Images
+        function displayFlatPlanPreviews() {
+            const previewContainer = document.getElementById('flatPlanPreview');
+            previewContainer.innerHTML = '';
+            
+            selectedFlatPlanImages.forEach((file, index) => {
+                const col = document.createElement('div');
+                col.className = 'col-md-3 col-sm-6 mb-3';
+                
+                const card = document.createElement('div');
+                card.className = 'card bg-dark border border-secondary';
+                
+                const img = document.createElement('img');
+                img.className = 'card-img-top';
+                img.style.height = '150px';
+                img.style.objectFit = 'cover';
+                img.src = URL.createObjectURL(file);
+                
+                const cardBody = document.createElement('div');
+                cardBody.className = 'card-body p-2';
+                
+                const fileName = document.createElement('small');
+                fileName.className = 'text-muted';
+                fileName.textContent = file.name.length > 20 ? file.name.substring(0, 20) + '...' : file.name;
+                
+                // Hash display
+                const hashDiv = document.createElement('div');
+                hashDiv.className = 'mt-2';
+                
+                const hashLabel = document.createElement('small');
+                hashLabel.className = 'text-info';
+                hashLabel.textContent = 'SHA-256 Hash: ';
+                
+                const hashValue = document.createElement('small');
+                hashValue.className = 'text-muted';
+                hashValue.style.fontSize = '10px';
+                hashValue.style.wordBreak = 'break-all';
+                hashValue.textContent = file.hash ? file.hash.substring(0, 20) + '...' : 'Generating...';
+                
+                hashDiv.appendChild(hashLabel);
+                hashDiv.appendChild(document.createElement('br'));
+                hashDiv.appendChild(hashValue);
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'btn btn-sm btn-danger mt-1';
+                removeBtn.innerHTML = 'Remove';
+                removeBtn.onclick = () => removeFlatPlanImage(index);
+                
+                cardBody.appendChild(fileName);
+                cardBody.appendChild(document.createElement('br'));
+                cardBody.appendChild(hashDiv);
+                cardBody.appendChild(removeBtn);
+                
+                card.appendChild(img);
+                card.appendChild(cardBody);
+                col.appendChild(card);
+                previewContainer.appendChild(col);
+            });
+        }
+
+        // Display image previews for Image List Images
+        function displayImageListPreviews() {
+            const previewContainer = document.getElementById('imageListPreview');
+            previewContainer.innerHTML = '';
+            
+            selectedImageListImages.forEach((file, index) => {
+                const col = document.createElement('div');
+                col.className = 'col-md-3 col-sm-6 mb-3';
+                
+                const card = document.createElement('div');
+                card.className = 'card bg-dark border border-secondary';
+                
+                const img = document.createElement('img');
+                img.className = 'card-img-top';
+                img.style.height = '150px';
+                img.style.objectFit = 'cover';
+                img.src = URL.createObjectURL(file);
+                
+                const cardBody = document.createElement('div');
+                cardBody.className = 'card-body p-2';
+                
+                const fileName = document.createElement('small');
+                fileName.className = 'text-muted';
+                fileName.textContent = file.name.length > 20 ? file.name.substring(0, 20) + '...' : file.name;
+                
+                // Hash display
+                const hashDiv = document.createElement('div');
+                hashDiv.className = 'mt-2';
+                
+                const hashLabel = document.createElement('small');
+                hashLabel.className = 'text-info';
+                hashLabel.textContent = 'SHA-256 Hash: ';
+                
+                const hashValue = document.createElement('small');
+                hashValue.className = 'text-muted';
+                hashValue.style.fontSize = '10px';
+                hashValue.style.wordBreak = 'break-all';
+                hashValue.textContent = file.hash ? file.hash.substring(0, 20) + '...' : 'Generating...';
+                
+                hashDiv.appendChild(hashLabel);
+                hashDiv.appendChild(document.createElement('br'));
+                hashDiv.appendChild(hashValue);
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'btn btn-sm btn-danger mt-1';
+                removeBtn.innerHTML = 'Remove';
+                removeBtn.onclick = () => removeImageListImage(index);
+                
+                cardBody.appendChild(fileName);
+                cardBody.appendChild(document.createElement('br'));
+                cardBody.appendChild(hashDiv);
+                cardBody.appendChild(removeBtn);
+                
+                card.appendChild(img);
+                card.appendChild(cardBody);
+                col.appendChild(card);
+                previewContainer.appendChild(col);
+            });
+        }
+        
+        // Remove specific image functions
+        function removeImage(index) {
+            selectedImages.splice(index, 1);
+            displayImagePreviews();
+            updateImageHashes();
+        }
+
+        function removeFlatPlanImage(index) {
+            selectedFlatPlanImages.splice(index, 1);
+            displayFlatPlanPreviews();
+            updateImageHashes();
+        }
+
+        function removeImageListImage(index) {
+            selectedImageListImages.splice(index, 1);
+            displayImageListPreviews();
+            updateImageHashes();
+        }
+        
+        // Add more images functions
+        window.addMoreImages = function() {
+            document.getElementById('contractImages').click();
+        }
+
+        window.addMoreFlatPlanImages = function() {
+            document.getElementById('flatPlanImages').click();
+        }
+
+        window.addMoreImageListImages = function() {
+            document.getElementById('imageListImages').click();
+        }
+        
+        // Clear all images functions
+        window.clearAllImages = function() {
+            selectedImages = [];
+            document.getElementById('contractImages').value = '';
+            displayImagePreviews();
+            updateImageHashes();
+        }
+
+        window.clearAllFlatPlanImages = function() {
+            selectedFlatPlanImages = [];
+            document.getElementById('flatPlanImages').value = '';
+            displayFlatPlanPreviews();
+            updateImageHashes();
+        }
+
+        window.clearAllImageListImages = function() {
+            selectedImageListImages = [];
+            document.getElementById('imageListImages').value = '';
+            displayImageListPreviews();
+            updateImageHashes();
+        }
+
+
+        // Initialize tooltips and input event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Bootstrap tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+
+            // Add event listeners for input changes and hash updates
+            const allInputs = [
+                'addressInput', 'moveInDateInput', 'depositAmountInput',
+                'houseOwnerName', 'houseOwnerSurname', 'houseOwnerDateOfBirth', 'houseOwnerIdTaxCode', 'houseOwnerEmail', 'houseOwnerMobile',
+                'tenantName', 'tenantSurname', 'tenantDateOfBirth', 'tenantIdTaxCode', 'tenantEmail', 'tenantMobile',
+                'notes'
+            ];
+            
+            allInputs.forEach(inputId => {
+                const input = document.getElementById(inputId);
+                if (input) {
+                    // Update hash when input changes and is locked
+                    input.addEventListener('input', async function() {
+                        if (input.readOnly && input.value.trim() !== '') {
+                            await generateHashForInput(inputId);
+                        }
+                    });
+
+                    // Update hash when input is locked
+                    input.addEventListener('change', async function() {
+                        if (input.readOnly && input.value.trim() !== '') {
+                            await generateHashForInput(inputId);
+                        }
+                    });
+                }
+            });
+        });
+
+        // Function to check if all inputs are locked
+        function checkAllInputsLocked() {
+            const sections = {
+                'House Information': ['addressInput', 'moveInDateInput', 'depositAmountInput'],
+                'House Owner': ['houseOwnerName', 'houseOwnerSurname', 'houseOwnerDateOfBirth', 'houseOwnerIdTaxCode', 'houseOwnerEmail', 'houseOwnerMobile'],
+                'Tenant': ['tenantName', 'tenantSurname', 'tenantDateOfBirth', 'tenantIdTaxCode', 'tenantEmail', 'tenantMobile'],
+                'Notes': ['notes']
+            };
+
+            const unlockedSections = [];
+
+            for (const [sectionName, inputIds] of Object.entries(sections)) {
+                const hasUnlockedInputs = inputIds.some(inputId => {
+                    const input = document.getElementById(inputId);
+                    return input && !input.readOnly;
+                });
+
+                if (hasUnlockedInputs) {
+                    unlockedSections.push(sectionName);
+                }
+            }
+
+            return {
+                allLocked: unlockedSections.length === 0,
+                unlockedSections: unlockedSections
+            };
+        }
+
+        // Sign Document function
+        window.signDocument = async function() {
+            // Check if all inputs are locked
+            const lockStatus = checkAllInputsLocked();
+            
+            if (!lockStatus.allLocked) {
+                // Show warning modal
+                const unlockedList = document.getElementById('unlockedSections');
+                unlockedList.innerHTML = '';
+                
+                lockStatus.unlockedSections.forEach(section => {
+                    const li = document.createElement('li');
+                    li.className = 'text-warning mb-1';
+                    li.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-unlock me-2" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M12 0a4 4 0 0 1 4 4v2.5h-1V4a3 3 0 1 0-6 0v2h.5A2.5 2.5 0 0 1 12 8.5v5A2.5 2.5 0 0 1 9.5 16h-7A2.5 2.5 0 0 1 0 13.5v-5A2.5 2.5 0 0 1 2.5 6H8V4a4 4 0 0 1 4-4M2.5 7A1.5 1.5 0 0 0 1 8.5v5A1.5 1.5 0 0 0 2.5 15h7a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 9.5 7z"/>
+                    </svg>${section}`;
+                    unlockedList.appendChild(li);
+                });
+
+                // Show modal
+                const modal = new bootstrap.Modal(document.getElementById('warningModal'));
+                modal.show();
+                return;
+            }
+
+            try {
+                // Show loading state
+                const signButton = document.querySelector('button[onclick="signDocument()"]');
+                const originalText = signButton.innerHTML;
+                signButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Processing...';
+                signButton.disabled = true;
+
+                // Update image hashes before signing
+                updateImageHashes();
+                
+                // Connect wallet
+                const userAddress = await connectWallet();
+                console.log('Connected wallet:', userAddress);
+
+                // Prepare contract data
+                const contractData = prepareContractData();
+                console.log('Contract data prepared:', contractData);
+
+                // Send transaction using ethers.js
+                const result = await sendTransaction(contractData);
+                console.log('Transaction result:', result);
+
+                const tx = { hash: result.transactionHash };
+                const receipt = result.receipt;
+
+                // Get contract ID from transaction receipt and transaction hash
+                let contractId, timestamp, transactionHash;
+                
+                console.log('Receipt structure:', receipt);
+                console.log('Receipt events:', receipt.events);
+                console.log('Receipt logs:', receipt.logs);
+                
+                // Transaction hash is always available
+                transactionHash = tx.hash;
+                console.log('Transaction hash:', transactionHash);
+                
+                // Try to extract contract ID from events (older ethers versions)
+                if (receipt.events && receipt.events.length > 0) {
+                    console.log('Using events approach');
+                    const event = receipt.events.find(e => e.event === 'ContractCreated');
+                    if (event && event.args) {
+                        contractId = event.args.id.toString();
+                        timestamp = event.args.createdAt.toString();
+                    }
+                }
+                
+                // Try to extract from logs (newer ethers versions)
+                if (!contractId && receipt.logs && receipt.logs.length > 0) {
+                    console.log('Using logs approach');
+                    try {
+                        const contract = getContractInstance();
+                        const eventInterface = contract.interface.getEvent('ContractCreated');
+                        
+                        for (const log of receipt.logs) {
+                            try {
+                                const decoded = eventInterface.parse(log);
+                                if (decoded) {
+                                    contractId = decoded.args.id.toString();
+                                    timestamp = decoded.args.createdAt.toString();
+                                    break;
+                                }
+                            } catch (e) {
+                                // Continue to next log
+                                continue;
+                            }
+                        }
+                    } catch (e) {
+                        console.log('Error parsing logs:', e);
+                    }
+                }
+                
+                // Fallback: use current timestamp if no contract ID found
+                if (!contractId) {
+                    console.log('Using fallback approach for contract ID');
+                    contractId = 'N/A';
+                }
+                
+                if (!timestamp) {
+                    timestamp = Math.floor(Date.now() / 1000).toString();
+                }
+                
+                console.log('Final contractId:', contractId);
+                console.log('Final timestamp:', timestamp);
+                console.log('Transaction hash:', transactionHash);
+
+                // Display success message
+                displayContractResult(contractId, timestamp, transactionHash);
+
+                // Reset button
+                signButton.innerHTML = originalText;
+                signButton.disabled = false;
+
+                console.log('Contract created successfully!');
+                console.log('Contract ID:', contractId);
+                console.log('Created At:', new Date(timestamp * 1000).toLocaleString());
+
+            } catch (error) {
+                console.error('Error creating contract:', error);
+                
+                // Reset button to allow retry
+                const signButton = document.querySelector('button[onclick="signDocument()"]');
+                signButton.innerHTML = 'Sign Document';
+                signButton.disabled = false;
+                signButton.classList.remove('btn-success');
+                signButton.classList.add('btn-danger');
+                signButton.style.cursor = 'pointer';
+
+                // Show error message
+                alert('Error creating contract: ' + error.message);
+            }
+        }
+        
+        // Form submission
+        document.getElementById('imageUploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (selectedImages.length === 0) {
+                alert('Please select at least one image');
+                return;
+            }
+            
+            // Log all hashes
+            console.log('Selected images with hashes:');
+            selectedImages.forEach((file, index) => {
+                console.log(`${index + 1}. ${file.name}: ${file.hash}`);
+            });
+            
+            alert(`Successfully processed ${selectedImages.length} image(s) with hash values`);
+        });
+    </script>
+</body>
+</html>
