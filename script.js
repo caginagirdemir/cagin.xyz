@@ -1295,21 +1295,10 @@ class DesktopPortfolio {
         return `
             <div class="content-section">
                 <h2>About Me</h2>
-                <p>Hi, I'm Cagin</p>
-                
-                <h3>Background</h3>
-                <p></p>
-                
-                <h3>What I Do</h3>
-                <ul>
-                    <li>Web3</li>
-                </ul>
-                
-                <h3>Competitive Programming Excellence</h3>
-                <p></p>
+                <p>Hi, I'm Cagin, a Web3 Citizen</p>
                 
                 <h3>Philosophy</h3>
-                <p></p>
+                <p>Game Development + Web3</p>
             </div>
         `;
     }
@@ -1343,20 +1332,34 @@ class DesktopPortfolio {
                 
                 <div class="projects-grid">
                     <div class="project-card">
-                        <h4>Blockchain</h4>
-                        <p>Researched and explored blockchain technology</p>
+                        <h4>Monad Invaders</h4>
+                        <p>2D web game, Farcester App</p>
+                        <a href="https://youtu.be/8LeQZQC30R4" target="_blank">Youtube</a>
                         <div class="project-tech">
                             <span class="tech-tag">Web3</span>
-                            <span class="tech-tag">Solidity</span>
+                            <span class="tech-tag">Godot Game Engine</span>
                         </div>
                     </div>
                    
                     <div class="project-card">
-                        <h4>Smart Contracts</h4>
-                        <p>Researched and explored blockchain technology</p>
+                        <h4>e-Rent Contracts</h4>
+                        <p>Blockchain-based tenant and house owner handshake</p>
+                        <a href="https://www.youtube.com/watch?v=JjUYMf8hwzU" target="_blank">Youtube</a>
                         <div class="project-tech">
                             <span class="tech-tag">Blockchain</span>
                             <span class="tech-tag">Smart Contracts</span>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <h4>Scout Agent Project</h4>
+                        <p>Scout Agent</p>
+                        <p>AI-Powered Weekly Token Discovery</p>
+                        <p>Track newly launched tokens, analyze on-chain signals, and discover the top 5 emerging projects every week — powered by AI and low-cost hardware friendly </p>
+                        <a href="https://www.youtube.com/watch?v=KOOw7eVQDLE" target="_blank">Youtube</a>
+                        <div class="project-tech">
+                            <span class="tech-tag">Blockchain</span>
+                            <span class="tech-tag">Embedded Systems</span>
                         </div>
                     </div>
                 </div>
@@ -1374,7 +1377,7 @@ class DesktopPortfolio {
                     <div class="skill-category">
                         <h4>Backend Development</h4>
                         <ul>
-                            <li>Node.js & Express</li>
+                            <li>C, C++</li>
                             <li>System Design</li>
                         </ul>
                     </div>
@@ -1383,7 +1386,7 @@ class DesktopPortfolio {
                         <h4>Frontend Development</h4>
                         <ul>
                             <li>JavaScript (ES6+)</li>
-                            <li>HTML5 & CSS3</li>
+                            <li>Godot, WebGL</li>
                             <li>Responsive Design</li>
                             <li>Modern UI/UX</li>
                         </ul>
